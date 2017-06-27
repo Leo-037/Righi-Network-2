@@ -36,8 +36,10 @@ INSTALLED_APPS = [
     # 'allauth.socialaccount.providers.instagram',
 
     'crispy_forms',
+    'hijack',
+    'compat',
+    'hijack_admin',
     'markdown_deux',
-    'stronghold',
 
     'accounts',
     'blog',
@@ -51,11 +53,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
 ]
 
-MIDDLEWARE_CLASSES = (
-    'stronghold.middleware.LoginRequiredMiddleware',
+LOGIN_EXEMPT_URLS = (
+    r'^account/',
 )
 
 ROOT_URLCONF = 'righinetwork.urls'
@@ -114,41 +115,71 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+LOGIN_URL = '/accounts/login/'
+
+# impostazioni Allauth
+
 SITE_ID = 1
-
-LOGIN_URL = '/accounts/login'
-
 LOGIN_REDIRECT_URL = '/'
 SOCIALACCOUNT_QUERY_EMAIL = True
-SOCIALACCOUNT_PROVIDERS = \
-    {'facebook':
-         {'METHOD': 'oauth2',
-          'SCOPE': ['email', 'public_profile', 'user_friends'],
-          'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
-          'FIELDS': [
-              'id',
-              'email',
-              'name',
-              'first_name',
-              'last_name',
-              'verified',
-              'locale',
-              'timezone',
-              'link',
-              'gender',
-              'updated_time'],
-          'EXCHANGE_TOKEN': True,
-          'LOCALE_FUNC': lambda request: 'it_IT',
-          'VERIFIED_EMAIL': False,
-          'VERSION': 'v2.4'}
-     }
+SOCIALACCOUNT_PROVIDERS = {
+    'facebook': {
+        'METHOD': 'oauth2',
+        'SCOPE': ['email', 'public_profile', 'user_friends'],
+        'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
+        'INIT_PARAMS': {'cookie': True},
+        'FIELDS': [
+            'id',
+            'email',
+            'name',
+            'first_name',
+            'last_name',
+            'verified',
+            'locale',
+            'timezone',
+            'link',
+            'gender',
+            'updated_time',
+        ],
+        'EXCHANGE_TOKEN': True,
+        'LOCALE_FUNC': lambda request: 'it',
+        'VERIFIED_EMAIL': False,
+        'VERSION': 'v2.9',
+    }
+}
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_AUTHENTICATION_METHOD = "username_email"
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
+ACCOUNT_SIGNUP_EMAIL_ENTER_TWICE = True
+ACCOUNT_LOGOUT_ON_GET = True
+
+ACCOUNT_LOGIN_FORM_CLASS = 'account.forms.UserLoginForm'
+ACCOUNT_SIGNUP_FORM_CLASS = 'accounts.forms.Signupform'
+
+EMAIL_BACKEND = 'django_smtp_ssl.SSLEmailBackend'
+EMAIL_HOST = 'smtp.zoho.com'
+EMAIL_HOST_USER = 'noreply@righi-network.com'
+EMAIL_HOST_PASSWORD = private_settings.EMAIL_HOST_PASSWORD
+EMAIL_PORT = 465
+EMAIL_USE_SSL = True
+EMAIL_USE_TLS = False
+DEFAULT_FROM_EMAIL = 'noreply@righi-network.com'
+
+# Impostazioni hijack
+
+HIJACK_LOGIN_REDIRECT_URL = '/'
+HIJACK_LOGOUT_REDIRECT_URL = '/admin/auth/user/'
+HIJACK_USE_BOOTSTRAP = True
+HIJACK_ALLOW_GET_REQUESTS = True
+
+# Impostazioni Cripsy Forms
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 # Internationalization
-# https://docs.djangoproject.com/en/1.10/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'it'
 
 TIME_ZONE = 'UTC'
 
