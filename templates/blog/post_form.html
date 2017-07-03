@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block head_extra %}
+    {{ form.media }}
+{% endblock head_extra %}
+
+
+{% block content %}
+    <div class="row">
+        <div class='col-6'>
+            <h1 class="text-primary">Post</h1>
+            <hr/>
+            <form method='POST' action='' enctype='multipart/form-data'>
+                {% csrf_token %}
+                {{ form|crispy }}
+                <input type='submit' class='btn btn-primary' value='Aggiungi Post'/>
+            </form>
+            <br>
+        </div>
+    </div>
+{% endblock content %}

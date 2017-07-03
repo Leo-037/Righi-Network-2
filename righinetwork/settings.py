@@ -5,9 +5,6 @@ from . import private_settings
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
-
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = private_settings.SECRET_KEY
 
@@ -36,16 +33,20 @@ INSTALLED_APPS = [
     # 'allauth.socialaccount.providers.instagram',
 
     'crispy_forms',
+    'django_summernote',
     'hijack',
     'compat',
     'hijack_admin',
     'markdown_deux',
+    'silk',
+    "taggit",
 
     'accounts',
     'blog',
 ]
 
 MIDDLEWARE = [
+    'silk.middleware.SilkyMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -88,7 +89,6 @@ AUTHENTICATION_BACKENDS = (
 WSGI_APPLICATION = 'righinetwork.wsgi.application'
 
 # Database
-# https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
 DATABASES = {
     'default': {
@@ -98,7 +98,6 @@ DATABASES = {
 }
 
 # Password validation
-# https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -177,6 +176,10 @@ HIJACK_ALLOW_GET_REQUESTS = True
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
+# Impostazioni Taggit
+
+TAGGIT_CASE_INSENSITIVE = True
+
 # Internationalization
 
 LANGUAGE_CODE = 'it'
@@ -190,7 +193,6 @@ USE_L10N = True
 USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
 
