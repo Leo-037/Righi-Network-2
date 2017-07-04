@@ -153,7 +153,8 @@ ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 ACCOUNT_SIGNUP_EMAIL_ENTER_TWICE = True
 ACCOUNT_LOGOUT_ON_GET = True
 
-ACCOUNT_LOGIN_FORM_CLASS = 'account.forms.UserLoginForm'
+# ACCOUNT_LOGIN_FORM_CLASS = 'accounts.forms.UserLoginForm'
+ACCOUNT_FORMS = {'login': 'accounts.forms.UserLoginForm'}
 ACCOUNT_SIGNUP_FORM_CLASS = 'accounts.forms.Signupform'
 
 EMAIL_BACKEND = 'django_smtp_ssl.SSLEmailBackend'
