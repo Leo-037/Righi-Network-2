@@ -1,34 +1,32 @@
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Div
 from django import forms
+from django.utils.translation import pgettext, ugettext, ugettext_lazy as _
 from django.contrib.auth import (
     authenticate,
     get_user_model,
 )
 from django.shortcuts import redirect
+from allauth.account.forms import LoginForm
 
 from .models import *
 
 User = get_user_model()
 
 
-class UserLoginForm(forms.Form):
-    username = forms.CharField()
-    password = forms.CharField(widget=forms.PasswordInput)
+class UserLoginForm(LoginForm):
+    def __init__(self, *args, **kwargs):
+        super(UserLoginForm, self).__init__(*args, **kwargs)
+        self.error_messages = {
+            'account_inactive':
+                _("Questo account al momento è inattivo"),
 
-    def clean(self, *args, **kwargs):
-        username = self.cleaned_data.get("username")
-        password = self.cleaned_data.get("password")
+            'email_password_mismatch':
+                _("L'indirizo email e/o la password non sono corretti"),
 
-        if username and password:
-            user = authenticate(username=username, password=password)
-            if not user:
-                raise forms.ValidationError("Questo utente non esiste")
-            if not user.check_password(password):
-                raise forms.ValidationError("Password Incorretta")
-            if not user.is_active:
-                raise forms.ValidationError("Questo utente non è più attivo")
-        return super(UserLoginForm, self).clean()
+            'username_password_mismatch':
+                _("L'username e/o la password non sono corretti"),
+        }
 
 
 class Signupform(forms.ModelForm):
