@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block head_title %}E-mail{% endblock %}
+
+{% block content %}
+    <br><br>
+    <div class="row justify-content-md-center align-self-center">
+        <div class="col col-lg-6">
+            <h1 class="text-primary">Aggiungi e-mail</h1>
+            <form class="login" method="POST" action="">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <button class="btn btn-primary btn-block btn-lg primaryAction" type="submit">Aggiungi</button>
+            </form>
+
+        </div>
+    </div>
+
+{% endblock %}
+
+

@@ -18,11 +18,23 @@ class StudenteModelAdmin(admin.ModelAdmin):
     list_filter = ["classe", "sezione", "is_rapclasse", "is_rapistituto"]
     search_fields = ["classe", "sezione", "is_rapclasse", "is_rapistituto"]
 
+    def user(self, obj):
+        if obj.user:
+            return obj.user
+        else:
+            return "Studente non attivo"
+
     def nome(self, obj):
-        return obj.user.first_name
+        if obj.user:
+            return obj.user.first_name
+        else:
+            return "/"
 
     def cognome(self, obj):
-        return obj.user.last_name
+        if obj.user:
+            return obj.user.last_name
+        else:
+            return "/"
 
     def rappr_classe(self, obj):
         return obj.is_rapclasse
@@ -37,7 +49,10 @@ class StudenteModelAdmin(admin.ModelAdmin):
     rappr_istituto.boolean = True
 
     def email(self, obj):
-        return obj.user.email
+        if obj.user:
+            return obj.user.email
+        else:
+            return "/"
 
     class Meta:
         model = Studente

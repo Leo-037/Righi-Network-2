@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django.db import models
 
 
-# Custom models
+# Custom model fields
 
 class UpperCharField(models.CharField):
     def __init__(self, *args, **kwargs):
@@ -30,8 +30,9 @@ class IntegerRangeField(models.IntegerField):
 
 # Models
 
+
 class Studente(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
 
     classe = IntegerRangeField(min_value=1, max_value=5)
     sezione = UpperCharField(max_length=1, uppercase=True)
@@ -40,3 +41,18 @@ class Studente(models.Model):
     is_rapistituto = models.BooleanField(default=False)
 
     is_attivato = models.BooleanField(default=False)
+    otpassword = models.CharField(max_length=8, blank=True)
+
+
+class DummyUser(models.Model):
+    username = models.CharField(max_length=100)
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    otpassword = models.CharField(max_length=8)
+    studente = models.OneToOneField(Studente, on_delete=models.CASCADE)
+
+
+class Guest(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    password = models.CharField(max_length=8, blank=True)
