@@ -43,6 +43,7 @@
 
             {% if instance.tags.all|length > 0 %}
                 <hr/>
+                Tag:
                 {% for tag in instance.tags.all %}
                     <a href="/?tag={{ tag }}">{{ tag }}</a> {% if user.is_superuser or user.studente.is_rapistituto %}
                     [<a class="text-danger"

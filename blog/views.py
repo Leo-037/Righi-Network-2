@@ -1,4 +1,4 @@
-from urllib.parse import quote_plus  # python 3
+from urllib.parse import quote_plus
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -12,17 +12,17 @@ from .forms import PostForm
 from .models import Post
 
 
-@login_required
-def redirect_home(request):
-    return HttpResponseRedirect("/")
-
-
 def all_tags():
     tags = []
     for post in Post.objects.all():
         tags += post.tags.all()
     tags = list(set(tags))
     return tags
+
+
+@login_required
+def redirect_home(request):
+    return HttpResponseRedirect("/")
 
 
 @login_required
@@ -43,7 +43,7 @@ def remove_tag(request, slug, tag):
         next = request.GET.get("next")
         return redirect(next)
     else:
-        return Http404
+        raise Http404
 
 
 @login_required
@@ -86,7 +86,7 @@ def post_detail(request, slug=None):
 @login_required
 def post_list(request):
     if not request.user.studente.is_attivato:
-        return Http404
+        raise Http404
     today = timezone.now().date()
     filtro = "-publish"
     queryset_list = Post.objects.filter(draft=False, publish__lte=today).order_by(filtro)
@@ -150,7 +150,7 @@ def post_update(request, slug=None):
     if form.is_valid():
         instance = form.save(commit=False)
         instance.save()
-        messages.success(request, "<a href='#'>Post</a> Salvato", extra_tags='html_safe')
+        messages.success(request, "Post Salvato", extra_tags='html_safe')
         return HttpResponseRedirect(instance.get_absolute_url())
 
     context = {
@@ -167,5 +167,5 @@ def post_delete(request, slug=None):
         raise Http404
     instance = get_object_or_404(Post, slug=slug)
     instance.delete()
-    messages.success(request, "Cancellato")
+    messages.success(request, "Post Cancellato")
     return HttpResponseRedirect("/")
