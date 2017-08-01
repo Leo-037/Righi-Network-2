@@ -7,11 +7,11 @@
 {% block content %}
     <br><br>
     <div class="row justify-content-md-center align-self-center">
-        <div class="col col-sm-6">
+        <div class="col col-lg-6">
             <div class="card">
                 <h1 class="card-header text-primary">Registrati</h1>
                 <div class="card-block">
-                    Hai già un account? <a href="{{ login_url }}">Accedi</a>
+                    Hai già un account? <a href="/accounts/login/">Accedi</a>
                     <hr/>
                     <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
                         {% csrf_token %}

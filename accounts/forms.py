@@ -1,15 +1,14 @@
+from allauth.account.forms import LoginForm
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit, Div
+from crispy_forms.layout import Layout, Submit
 from django import forms
-from django.utils.translation import pgettext, ugettext, ugettext_lazy as _
 from django.contrib.auth import (
     authenticate,
     get_user_model,
 )
-from django.shortcuts import redirect
-from allauth.account.forms import LoginForm
+from django.utils.translation import ugettext_lazy as _
 
-from .models import *
+from .models import DummyUser
 
 User = get_user_model()
 
@@ -28,71 +27,87 @@ class UserLoginForm(LoginForm):
                 _("L'username e/o la password non sono corretti"),
         }
 
+    def clean(self, *args, **kwargs):
+        username = self.cleaned_data.get("username")
+        password = self.cleaned_data.get("password")
 
-class Signupform(forms.ModelForm):
+        if username and password:
+            user = authenticate(username=username, password=password)
+            if not user:
+                raise forms.ValidationError("Questo utente non esiste")
+            if not user.check_password(password):
+                raise forms.ValidationError("Password Incorretta")
+            if not user.is_active:
+                raise forms.ValidationError("Questo utente non è più attivo")
+        return super(UserLoginForm, self).clean(*args, **kwargs)
+
+
+class StudenteRegisterForm(forms.Form):
     def __init__(self, *args, **kwargs):
-        super(Signupform, self).__init__(*args, **kwargs)
+        super(StudenteRegisterForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_class = 'form-inline'
-        self.helper.field_template = 'bootstrap3/layout/inline_field.html'
+        self.helper.field_template = 'bootstrap4/layout/inline_field.html'
         self.helper.form_method = 'POST'
         self.helper.add_input(Submit('Aggiungi Studente', 'Aggiungi Studente', css_class='btn-primary'))
         self.helper.layout = Layout(
-            'username',
             'nome',
             'cognome',
-            'classe',
-            'sezione',
         )
 
     nome = forms.CharField(label='Nome')
     cognome = forms.CharField(label='Cognome')
-    classe = forms.IntegerField(min_value=1, max_value=5)
-    sezione = forms.CharField(max_length=1)
+
+
+class DummySignupForm(forms.ModelForm):
+    username = forms.CharField()
+    otpassword = forms.CharField(label="Password di primo login")
+    new_password = forms.CharField(widget=forms.PasswordInput, label="Nuova password")
+    new_password2 = forms.CharField(widget=forms.PasswordInput, label='Conferma nuova password')
+    email = forms.EmailField(label='Indirizzo Email')
+    email2 = forms.EmailField(label='Conferma Email')
 
     class Meta:
-        model = User
-        fields = [
-            'username',
-            'nome',
-            'cognome',
-            'classe',
-            'sezione',
-        ]
+        model = DummyUser
 
-    def clean_sezione(self):
-        sezione = self.cleaned_data.get('sezione')
-        sezione.upper()
-        return sezione
+        exclude = ["first_name", "last_name", "studente"]
 
-    def signup(self, request, user):
-        user.first_name = self.cleaned_data["nome"]
-        user.last_name = self.cleaned_data["cognome"]
-        user.save()
-        classe = self.cleaned_data["classe"]
-        sezione = self.cleaned_data["sezione"]
-        stud = Studente(user=user, classe=classe, sezione=sezione, is_attivato=True)
-        stud.save()
-        return redirect("/")
+    def clean_otpassword(self):
+        otpassword_form = self.cleaned_data.get("otpassword")
+        username = self.cleaned_data.get("username")
+        otpassword_model = DummyUser.objects.get(username=username).otpassword
+        if otpassword_form != otpassword_model:
+            raise forms.ValidationError("Password di primo login non valida")
+        return otpassword_form
+
+    def clean_email2(self):
+        email = self.cleaned_data.get('email')
+        email2 = self.cleaned_data.get('email2')
+        if email != email2:
+            raise forms.ValidationError("Le mail devono coincidere")
+        email_qs = User.objects.filter(email=email)
+        if email_qs.exists():
+            raise forms.ValidationError("Questa email è già stata registrata")
+        return email
+
+    def clean_new_password2(self):
+        password = self.cleaned_data.get('new_password')
+        password2 = self.cleaned_data.get('new_password2')
+        if password != password2:
+            raise forms.ValidationError("Le password devono coincidere")
+        return password
 
 
-class ClasseForm(forms.Form):
+class GuestRegisterForm(forms.Form):
     def __init__(self, *args, **kwargs):
-        super(ClasseForm, self).__init__(*args, **kwargs)
+        super(GuestRegisterForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_class = 'form-inline'
-        self.helper.field_template = 'bootstrap3/layout/inline_field.html'
+        self.helper.field_template = 'bootstrap4/layout/inline_field.html'
         self.helper.form_method = 'POST'
-        self.helper.layout = Layout(Div(
-            'classe',
-            'sezione',
-            Submit('Aggiungi Classe', 'Aggiungi Classe', css_class='btn-primary')
-        ))
+        self.helper.add_input(Submit('Aggiungi ospite', 'Aggiungi ospite', css_class='btn-primary'))
+        self.helper.layout = Layout(
+            'username'
+        )
 
-    classe = forms.IntegerField(min_value=1, max_value=5)
-    sezione = forms.CharField(max_length=1)
-
-    def clean_sezione(self):
-        sezione = self.cleaned_data.get('sezione')
-        sezione.upper()
-        return sezione
+    username = forms.CharField(label='Username')

@@ -8,16 +8,16 @@
 {% block content %}
     <br><br>
     <div class="row justify-content-md-center align-self-center">
-        <div class="col col-sm-6">
+        <div class="col col-lg-6">
             <h1 class="text-primary">{% trans "Confirm E-mail Address" %}</h1>
             <hr>
             {% if confirmation %}
 
                 {% user_display confirmation.email_address.user as user_display %}
 
-                <h5>{% blocktrans with confirmation.email_address.email as email %}Confermi che
+                <h5>{% with confirmation.email_address.email as email %}Confermi che
                     <a href="mailto:{{ email }}">{{ email }}</a> è un indirizzo email associato all'utente
-                    {{ user_display }}?{% endblocktrans %}</h5>
+                    {{ user_display }}?{% endwith %}</h5>
                 <br>
                 <form method="post" action="{% url 'account_confirm_email' confirmation.key %}">
                     {% csrf_token %}
@@ -28,8 +28,8 @@
 
                 {% url 'account_email' as email_url %}
 
-                <p>{% blocktrans %}This e-mail confirmation link expired or is invalid. Please
-                    <a href="{{ email_url }}">issue a new e-mail confirmation request</a>.{% endblocktrans %}</p>
+                <h5>Questo link di conferma e-mail è invalido.
+                    <a href="{{ email_url }}">Invia una nuova richiesta di conferma</a>.</h5>
 
             {% endif %}
         </div>

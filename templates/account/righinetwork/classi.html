@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block head_title %}
+    {{ title }}
+{% endblock head_title %}
+
+
+{% block content %}
+    <nav class="breadcrumb">
+        <span class="breadcrumb-item"><a href="{{ BASE_DIR }}/">Home</a></span>
+        <span class="breadcrumb-item active">Gestione Classi</span>
+    </nav>
+
+    <div class="row">
+        <div class="col-md-10 offset-md-1">
+            <h1 class="text-primary text-center">Gestione Classi</h1>
+            <hr>
+            <div class="col-md-8">
+                <form onsubmit="window.location = '/gestione/' + classe.value + '-' + sezione.value.toUpperCase(); return false;">
+                    <div class="input-group">
+                        <input class="form-control" id="search" placeholder='Classe' type="number" name="classe"
+                               value="" required>
+                        <input class="form-control" id="search" placeholder='Sezione' name="sezione"
+                               value="" required>
+                        <span class="input-group-btn">
+				                <button class="btn btn-primary"><i class="fa fa-plus"></i></button>
+                            </span>
+                    </div>
+                </form>
+            </div>
+            <hr>
+            <div class="container">
+                <h3 class="text-left text-primary">{{ studenti_attivati }} / {{ studenti_totali }} studenti
+                    attivati</h3><br/>
+                <div class="card-columns">
+                    <div class="card">
+                        <div class="card-block">
+                            <a href="{% url 'accounts:guests' %}">
+                                <h4>Ospiti</h4></a>
+                        </div>
+                    </div>
+                    {% for classe in classi %}
+                        <div class="card">
+                            <div class="card-block">
+                                <a href="{% url 'accounts:classe' classe.0 classe.1 %}">
+                                    <h4>{{ classe.0 }}^ {{ classe.1 }}</h4></a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block head_title %}
+    {{ title }}
+{% endblock head_title %}
+
+
+{% block content %}
+    <nav class="breadcrumb">
+        <span class="breadcrumb-item"><a href="{{ BASE_DIR }}/">Home</a></span>
+        <span class="breadcrumb-item"><a href="{% url "accounts:gestione" %}">Gestione Classi</a></span>
+        <span class="breadcrumb-item active">Ospiti</span>
+    </nav>
+
+    <div class="row">
+        <div class="col-md-10 offset-md-1">
+            <h1 class="text-center text-primary">Ospiti</h1>
+            <hr>
+            {% crispy form %}
+            <br>
+            <div class="col-md-12">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Username</th>
+                        <th>Password</th>
+                        <th>Modifica</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for ospite in ospiti %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ ospite.user.username }}</td>
+                            <td>{{ ospite.password }}</td>
+                            <td><a class="btn btn-danger confirm-delete" role="button"
+                                   href="{% url 'accounts:delete-guest' ospite.user.username %}">Elimina</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

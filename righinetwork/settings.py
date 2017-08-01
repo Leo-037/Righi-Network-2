@@ -79,10 +79,7 @@ TEMPLATES = [
 ]
 
 AUTHENTICATION_BACKENDS = (
-    # Needed to login by username in Django admin, regardless of `allauth`
     'django.contrib.auth.backends.ModelBackend',
-
-    # `allauth` specific authentication methods, such as login by e-mail
     'allauth.account.auth_backends.AuthenticationBackend',
 )
 
@@ -150,12 +147,10 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = "username_email"
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
-ACCOUNT_SIGNUP_EMAIL_ENTER_TWICE = True
 ACCOUNT_LOGOUT_ON_GET = True
+ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = "/"
 
-# ACCOUNT_LOGIN_FORM_CLASS = 'accounts.forms.UserLoginForm'
 ACCOUNT_FORMS = {'login': 'accounts.forms.UserLoginForm'}
-ACCOUNT_SIGNUP_FORM_CLASS = 'accounts.forms.Signupform'
 
 EMAIL_BACKEND = 'django_smtp_ssl.SSLEmailBackend'
 EMAIL_HOST = 'smtp.zoho.com'
