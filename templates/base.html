@@ -50,7 +50,7 @@
 
             <div class="ui right secondary menu">
                 {% if user.is_superuser %}
-                    <a href="{% url "admin" %}" class="ui item">Admin</a>
+                    <a href="{% url "admin:index" %}" class="ui item">Admin</a>
                 {% endif %}
                 {% if user.studente.is_rapistituto or user.is_superuser %}
                     <a href="{% url "accounts:gestione" %}" class="ui item">Gestione</a>
