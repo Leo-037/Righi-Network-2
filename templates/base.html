@@ -10,16 +10,67 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>{% block head_title %}{% endblock head_title %}</title>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.css"
+          integrity="sha256-/Z28yXtfBv/6/alw+yZuODgTbKZm86IKbPE/5kjO/xY=" crossorigin="anonymous"/>
     <link rel="stylesheet" type="text/css" href="{% static 'hijack/hijack-styles.css' %}"/>
-    <link rel="stylesheet" type="text/css" href="{% static "css/bootstrap-social.css" %}"/>
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
-          integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN">
+    {#    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"#}
+    {#          integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN">#}
+
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g="
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"
+            integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.js"
+            integrity="sha256-Bhi6GMQ/72uYZcJXCJ2LToOIcN3+Cx47AZnq/Bw1f7A=" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function () {
+            $('.dropdown').dropdown();
+            $('.message .close').on('click', function () {
+                $(this).closest('.message').transition('fade');
+            });
+        })
+    </script>
+
     {% block head_extra %}{% endblock head_extra %}
 </head>
 
 <body>
+<div class="ui main borderless menu">
+    <div class="ui text container">
+        <div class="header item">
+            <img class="logo" src="{% static 'righinetwork/r.jpg' %}">
+            Righi-Network
+        </div>
+        {% if user.is_authenticated %}
+            <a href="{{ BASE_DIR }}/" class="active item">Home</a>
+            {#        <a href="#" class="item">Articles</a>#}
+
+            <div class="ui right secondary menu">
+                {% if user.is_superuser %}
+                    <a href="{{ BASE_DIR }}/admin/" class="ui item">Admin</a>
+                {% endif %}
+                {% if user.studente.is_rapistituto or user.is_superuser %}
+                    <a href="{% url "accounts:gestione" %}" class="ui item">Gestione</a>
+                {% endif %}
+
+                <a href="#" class="ui right floated dropdown item" id="user-dropdown">
+                    {{ user.first_name }} <i class="dropdown icon"></i>
+                    <div class="menu">
+                        <div class="header">Impostazioni</div>
+                        <div class="item" href="{% url 'account_email' %}">E-mail</div>
+                        <div class="item" href="{% url 'account_reset_password' %}">Password</div>
+                        <div class="divider"></div>
+                        <div class="item" href="{% url 'account_logout' %}">Esci</div>
+                    </div>
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
 <script>
     window.fbAsyncInit = function () {
         FB.init({
@@ -47,90 +98,28 @@
 {% if request|is_hijacked %}
 {% endif %}
 
-<nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse">
-    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
-            data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-            aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <a class="navbar-brand" href="/">
-        {#        <img src="{% static '' %}" width="30" height="30" class="d-inline-block align-top" alt="">#}
-        Righi-Network
-    </a>
-    {% if user.is_authenticated %}
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="nav navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
-                </li>
-                {#                <li class="nav-item">#}
-                {#                    <a class="nav-link" href="#">Link</a>#}
-                {#                </li>#}
-                {#                <li class="nav-item">#}
-                {#                    <a class="nav-link disabled" href="#">Disabled</a>#}
-                {#                </li>#}
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                {% if user.is_superuser %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ BASE_DIR }}/admin/">Admin</a>
-                    </li>
-                {% endif %}
-                {% if user.studente.is_rapistituto or user.is_superuser %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url "accounts:gestione" %}">Gestione</a>
-                    </li>
-                {% endif %}
+<div class="ui container">
 
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
-                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {{ user.first_name }}
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-                        <h6 class="dropdown-header">Impostazioni</h6>
-                        <a class="dropdown-item" href="{% url 'account_email' %}">E-mail</a>
-                        <a class="dropdown-item" href="{% url 'account_reset_password' %}">Password</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="{% url 'account_logout' %}">Esci</a>
-                    </div>
-                </li>
-            </ul>
-        </div>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="ui green floating message">
+                <i class="close icon"></i>
+                <div class="header">Messaggio</div>
+                <span>{{ message }}</span>
+            </div>
+        {% endfor %}
     {% endif %}
-</nav>
 
-{% if messages %}
-    {% for message in messages %}
-        <div class="alert alert-dismissible alert-success fade show" role="alert" id="success-alert">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            <h6>{{ message }}</h6>
-        </div>
-    {% endfor %}
-{% endif %}
-<div class="container">
-    <br>
     {% block content %}
     {% endblock content %}
+
     {% block extra_body %}
-    {% endblock %}
+    {% endblock extra_body %}
 </div>
 
 <footer>
 
 </footer>
 
-<!-- jQuery first, then Tether, then Bootstrap JS. -->
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-        integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g="
-        crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"
-        integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
-        crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"
-        integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
-        crossorigin="anonymous"></script>
 </body>
 </html>
