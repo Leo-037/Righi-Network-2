@@ -7,7 +7,7 @@ from django.contrib import admin
 urlpatterns = [
     url(r'^accounts/signup/$', signup_view),
     url(r'^accounts/', include('allauth.urls')),
-    url(r'^admin/', admin.site.urls),
+	url(r'^admin/', admin.site.urls, name="admin"),
     url(r'^gestione/', include('accounts.urls', namespace='accounts')),
     url(r'^hijack/', include('hijack.urls')),
     url(r'^silk/', include('silk.urls', namespace='silk')),
