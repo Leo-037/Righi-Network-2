@@ -13,24 +13,41 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.css"
           integrity="sha256-/Z28yXtfBv/6/alw+yZuODgTbKZm86IKbPE/5kjO/xY=" crossorigin="anonymous"/>
     <link rel="stylesheet" type="text/css" href="{% static 'hijack/hijack-styles.css' %}"/>
-    {#    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"#}
-    {#          integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN">#}
 
+    <script src="{% static 'js/jquery-3.2.1.js' %}"></script>
+    {#    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>#}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.js"></script>
 
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-            integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g="
-            crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"
-            integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
-            crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.js"
-            integrity="sha256-Bhi6GMQ/72uYZcJXCJ2LToOIcN3+Cx47AZnq/Bw1f7A=" crossorigin="anonymous"></script>
+    <style>
+        .edit {
+            display: none;
+        }
+    </style>
     <script>
         $(document).ready(function () {
             $('.dropdown').dropdown();
             $('.message .close').on('click', function () {
                 $(this).closest('.message').transition('fade');
             });
+            $('#edit-button').on('click', function () {
+                $('.edit').toggle();
+            });
+            $('.delete-button').on('click', function () {
+                var delete_href = $(this).data('href');
+                $('#delete-modal')
+                    .modal('setting', 'transition', 'fade up')
+                    .modal({
+                        closable: false,
+                        onApprove: function () {
+                            window.location = delete_href;
+                        }
+                    })
+                    .modal('show')
+            });
+            $('#ascacasc')
+                .sticky({
+                    context: '#ascac'
+                });
         })
     </script>
 
@@ -38,10 +55,10 @@
 </head>
 
 <body>
-<div class="ui main borderless menu">
+
+<div class="ui main {% if request|is_hijacked %}top attached{% endif %} borderless menu">
     <div class="ui text container">
         <div class="header item">
-            <img class="logo" src="{% static 'righinetwork/r.jpg' %}">
             Righi-Network
         </div>
         {% if user.is_authenticated %}
@@ -71,6 +88,20 @@
     </div>
 </div>
 
+{% if request|is_hijacked %}
+    <div class="ui attached secondary yellow segment">
+        <div class="ui grid">
+            <div class="eight wide right aligned vertically centered column">
+                <h3 class="ui header">Hijack di {{ request.user.username }}</h3>
+            </div>
+            <div class="eight wide left aligned column">
+                <h3 class="ui blue header"><a href="{{ BASE_DIR }}/hijack/release-hijack/">Rilascia</a></h3>
+            </div>
+        </div>
+    </div>
+    <br>
+{% endif %}
+
 <script>
     window.fbAsyncInit = function () {
         FB.init({
@@ -94,27 +125,42 @@
     }(document, 'script', 'facebook-jssdk'));
 </script>
 
-{% hijack_notification %}
-{% if request|is_hijacked %}
-{% endif %}
 
 <div class="ui container">
+    {% for message in messages %}
+        <div class="ui green floating message">
+            <i class="close icon"></i>
+            <div class="header">Messaggio</div>
+            <span>{{ message }}</span>
+        </div>
+    {% endfor %}
 
-    {% if messages %}
-        {% for message in messages %}
-            <div class="ui green floating message">
-                <i class="close icon"></i>
-                <div class="header">Messaggio</div>
-                <span>{{ message }}</span>
-            </div>
-        {% endfor %}
-    {% endif %}
 
     {% block content %}
     {% endblock content %}
 
     {% block extra_body %}
     {% endblock extra_body %}
+
+    <div class="ui basic animated modal" id="delete-modal">
+        <div class="ui icon header">
+            <i class="delete icon"></i>
+            Eliminare questo elemento?
+        </div>
+        <div class="content">
+            <h3>L'operazione non può essere annullata</h3>
+        </div>
+        <div class="actions">
+            <div class="ui red basic cancel inverted button">
+                <i class="remove icon"></i>
+                Annulla
+            </div>
+            <div class="ui green ok inverted button">
+                <i class="checkmark icon"></i>
+                Elimina
+            </div>
+        </div>
+    </div>
 </div>
 
 <footer>

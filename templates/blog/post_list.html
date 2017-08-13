@@ -1,205 +1,221 @@
 {% extends "base.html" %}
+{% load humanize %}
 
 {% block title %}
     {{ title }}
 {% endblock %}
 
 {% block head_extra %}
+    <script>
+        $(document).ready(function () {
+            function search(input) {
+                window.location = '/?q=' + input + '{% if request.GET.tag %}&tag={{ request.GET.tag }}{% endif %}'
+            }
+
+            $('#search-button').on('click', function () {
+                search($('#search').val());
+            });
+            $('.search-name').on("click", function () {
+                search($(this).data("name"))
+            });
+        });
+    </script>
 {% endblock head_extra %}
 
 {% block content %}
-    <nav class="breadcrumb">
-        <span class="breadcrumb-item active">Home</span>
-    </nav>
 
-    <div class="row">
-        <div class="col-md-8">
-            <h1 class="page-header text-primary">
-                {{ title }}
-                {#<small>Secondary Text</small>#}
-            </h1>
-            <hr>
-            <div>
-                <form onsubmit="window.location = '/?q=' + search.value + '{% if request.GET.tag %}&tag={{ request.GET.tag }}{% endif %}'; return false;">
-                    <div class="input-group">
-                        <input class="form-control" id="search" placeholder='Cerca post' type="search" name="search"
-                               value="" required>
-                        <span class="input-group-btn">
-				            <button class="btn btn-primary"><i
-                                    class="fa fa-search"></i></button>
-                        </span>
-                        {% if request.GET.q or request.GET.tag %}
-                            <span class="input-group-btn">
-                            <button type="button" {% if next %}onclick="location.href='{{ next }}';"
-                                    {% else %}onclick="location.href='/';"{% endif %} class="btn btn-danger"><i
-                                    class="fa fa-close"></i></button>
-                        </span>
-                        {% endif %}
-                    </div>
-                </form>
-                {% if request.GET.q or request.GET.tag %}
-                    <br>
-                    <ul>
+    <!-- breadcrumb -->
+    <div class="ui green clearing segment">
+        <div class="ui large breadcrumb">
+            <div class="active section">Home</div>
+        </div>
+    </div>
+
+
+    <div class="ui stackable two column grid">
+
+        <!-- barra di ricerca -->
+        <div class="divided row">
+            <div class="eleven wide column">
+                <!-- search -->
+                <div class="ui action fluid input">
+                    <input id="search" placeholder="Cerca">
+                    <button class="ui icon button" id="search-button">
+                        <i class="search icon"></i>
+                    </button>
+                    {% if request.GET.q or request.GET.tag %}
+                        <button {% if next %}onclick="location.href='{{ next }}';"
+                                {% else %}onclick="location.href='/';"{% endif %} class="ui negative icon button">
+                            <i class="close icon"></i>
+                        </button>
+                    {% endif %}
+                </div>
+            </div>
+            <!-- parole e tag cercati -->
+            {% if request.GET.q or request.GET.tag %}
+                <div class="five wide column">
+                    <div class="ui large labels">
                         {% if request.GET.q %}
-                            <li>
-                                <h4 class="text-warning">
-                                    <small class="text-muted">Cerca:</small>
-                                    {{ request.GET.q|title }}</h4>
-                            </li>
+                            <div class="ui label"><i class="search icon"></i>{{ request.GET.q|title }}
+                            </div>
                         {% endif %}
                         {% if request.GET.tag %}
-                            <li>
-                                <h4 class="text-warning">
-                                    <small class="text-muted">Tag:</small>
-                                    {{ request.GET.tag|title }}</h4>
-                            </li>
-                        {% endif %}
-                    </ul>
-                {% endif %}
-            </div>
-            <hr>
-
-            {% if object_list|length > 0 %}
-                {% for post in object_list %}
-                    {% url "blog:detail" post.slug as post_url %}
-                    <div class="card card-outline-primary mb-4">
-                        {% if user.is_superuser or user.studente.is_rapistituto %}
-                            <div class="card-header">
-                                <h5 class="text-center"><a href="{% url "blog:update" post.slug %}"
-                                                           class="text-warning">Modifica</a>
-                                    /
-                                    <a href="{% url "blog:delete" post.slug %}" class="text-danger">Elimina</a>
-                                    {% if post.draft %} / <span class="text-info">Bozza</span>{% endif %}
-                                    {% if post.publish > today %}
-                                        / <span class="text-info">Post Futuro</span>{% endif %}</h5>
-                            </div>
-                        {% endif %}
-                        {% if post.image %}
-                            <img class="card-img-top img-fluid" src="{{ post.image.url }}" alt="Card image cap">
-                        {% endif %}
-                        <div class="card-block">
-                            <h2 class="card-title"><a href="{{ post_url }}">{{ post.title }}</a></h2>
-                            <p class="card-text">{{ post.content|truncatewords_html:100|safe }}</p>
-                            <hr>
-                            <a href="{{ post_url }}" class="btn btn-secondary text-primary">Leggi &rarr;</a>
-                        </div>
-                        <div class="card-footer text-muted">
-                            Postato il {{ post.publish|date:'d-m-Y' }} da <a
-                                href="/?q={{ post.user.first_name|lower }}+{{ post.user.last_name|lower }}">{{ post.user.first_name }} {{ post.user.last_name }}</a>
-                        </div>
-                        {% if post.tags.all|length > 0 %}
-                            <div class="card-footer text-muted">
-                                Tag: {% for tag in post.tags.all %}
-                                <a href="/?tag={{ tag }}">{{ tag }}</a>
-                                {% if user.is_superuser or user.studente.is_rapistituto %}
-                                    [<a class="text-danger" href="{% url "blog:remove-tag" post.slug tag %}?next=/"><i
-                                        class="fa fa-close"></i></a>]{% endif %}
-                                {% if forloop.counter < post.tags.all|length %}/{% endif %}
-                            {% endfor %}
-                            </div>
+                            <div class="ui tag label">{{ request.GET.tag|title }}</div>
                         {% endif %}
                     </div>
-                {% endfor %}
-
-                <!-- Pagination -->
-                {% if object_list.has_other_pages %}
-                    <div class="row">
-                        <div class="col-4">
-                            <hr>
-                        </div>
-                        <ul class="pagination justify-content-center col-4">
-                            {% if object_list.has_previous %}
-                                <li class="page-item"><a class="page-link"
-                                                         href="?page={{ object_list.previous_page_number }}">&laquo;</a>
-                                </li>
-                            {% else %}
-                                <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
-                            {% endif %}
-                            {% for i in object_list.paginator.page_range %}
-                                {% if object_list.number == i %}
-                                    <li class="page-item active"><span class="page-link">{{ i }} <span
-                                            class="sr-only">(corrente)</span></span></li>
-                                {% else %}
-                                    <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
-                                {% endif %}
-                            {% endfor %}
-                            {% if object_list.has_next %}
-                                <li class="page-item"><a class="page-link"
-                                                         href="?page={{ object_list.next_page_number }}">&raquo;</a>
-                                </li>
-                            {% else %}
-                                <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
-                            {% endif %}
-                        </ul>
-                        <div class="col-4">
-                            <hr>
-                        </div>
-                    </div>
-                {% endif %}
-
-            {% else %}
-                {% if not user.studente.is_rapistituto and not user.is_superuser %}
-                    <hr>
-                {% endif %}
-                <h2 class="text-center text-warning"><i>Non ci sono comunicazioni</i></h2>
-
+                </div>
             {% endif %}
         </div>
 
-        <!-- Sidebar Widgets Column -->
-        <div class="col-md-4">
 
-            <!-- Edit Widget -->
-            {% if user.studente.is_rapistituto or user.is_superuser %}
-                <div class="card my-4">
-                    <h5 class="card-header">Post</h5>
-                    <div class="card-block">
-                        <a href="{% url 'blog:create' %}" class="btn btn-primary btn-block"
-                        >Aggiungi</a>
-                    </div>
-                </div>
-            {% endif %}
+        <!-- contenuto pagina -->
+        <div class="row">
 
-            <!-- Tag Widget -->
-            {% if tags|length > 0 %}
-                <div class="card my-4">
-                    <h5 class="card-header">Tag</h5>
-                    <div class="card-block">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <ul class="list-unstyled mb-0">
-                                    {% for tag in tags %}
-                                        {% if not forloop.counter|divisibleby:2 %}
-                                            <li>
-                                                <a href="/?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}tag={{ tag }}">{{ tag }}</a>
-                                            </li>
-                                        {% endif %}
-                                    {% endfor %}
-                                </ul>
+            <!-- colonna di sinistra -->
+            <div class="eleven wide column">
+
+                <!-- lista post -->
+                {% if object_list|length > 0 %}
+
+                    <div class="ui raised stackable cards">
+
+                        {% for post in object_list %}
+                            {% url "blog:detail" post.slug as post_url %}
+
+                            <div class="ui fluid card" id="{{ post.slug }}">
+
+                                <!-- header per admin -->
+                                {% if user.is_superuser or user.studente.is_rapistituto %}
+                                    <div class="edit">
+                                        <div class="ui two top attached buttons">
+                                            <a href="{% url "blog:update" post.slug %}"
+                                               class="ui yellow button">Modifica</a>
+                                            /
+                                            <div data-href="{% url "blog:delete" post.slug %}"
+                                                 class="ui red button delete-button" id="">Elimina
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                                {% if post.image %}
+                                    <div class="image">
+                                        {{ post.image }}
+                                    </div>
+                                {% endif %}
+
+                                <div class="content">
+                                    {% if post.publish > today %}
+                                        <div class="ui teal right floated label">Post Futuro</div>
+                                    {% endif %}
+                                    {% if post.draft %}
+                                        <div class="ui red right floated label">Bozza</div>
+                                    {% endif %}
+                                    <div class="header">
+                                        <h2 class="ui header"><a href="{{ post_url }}">{{ post.title }}</a></h2>
+                                    </div>
+                                    <div class="meta">
+                                        <span>{{ post.publish|date:'d-m-Y' }}</span>
+                                        <span>
+                                        <a data-name="{{ post.user.first_name|lower }}+{{ post.user.last_name|lower }}"
+                                           class="search-name">
+                                        {{ post.user.first_name }} {{ post.user.last_name }}
+                                        </a>
+                                    </span>
+                                    </div>
+                                </div>
+
+                                <div class="content">
+                                    <div class="description">
+                                        <h4>{{ post.content|truncatewords_html:100|safe }}</h4>
+                                    </div>
+                                </div>
+
+                                <!-- tag -->
+                                {% if post.tags.all|length > 0 %}
+                                    <div class="extra content">
+                                        <div class="ui tag labels">
+                                            {% for tag in post.tags.all %}
+                                                <div class="ui label" href="/?tag={{ tag }}">{{ tag }}
+                                                    {% if user.is_superuser or user.studente.is_rapistituto %}
+                                                        <a class="detail"
+                                                           href="{% url "blog:remove-tag" post.slug tag %}?next=/"><i
+                                                                class="ui red close icon"></i></a>
+                                                    {% endif %}
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                                <a class="ui green bottom attached button" href="{{ post_url }}">
+                                    Leggi <i class="long arrow right icon"></i>
+                                </a>
                             </div>
-                            <div class="col-md-6">
-                                <ul class="list-unstyled mb-0">
-                                    {% for tag in tags %}
-                                        {% if forloop.counter|divisibleby:2 %}
-                                            <li>
-                                                <a href="/?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}tag={{ tag }}">{{ tag }}</a>
-                                            </li>
-                                        {% endif %}
-                                    {% endfor %}
-                                </ul>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Pagination -->
+                    {% if object_list.has_other_pages %}
+                        <br>
+                        <div class="ui centered pagination menu">
+                            {% for i in object_list.paginator.page_range %}
+                                {% if object_list.number == i %}
+                                    <a class="active item">{{ i }}</a>
+                                {% else %}
+                                    <a class="item" href="?page={{ i }}">{{ i }}</a>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                {% else %}
+                    {% if not user.studente.is_rapistituto and not user.is_superuser %}
+                        <hr>
+                    {% endif %}
+                    <h1 class="ui orange centered header"><i>Non ci sono comunicazioni</i></h1>
+                {% endif %}
+            </div>
+
+            <!-- colonna di destra -->
+            <div class="five wide column">
+
+                <div class="ui stackable green fluid cards">
+                    <!-- Edit Widget -->
+                    {% if user.studente.is_rapistituto or user.is_superuser %}
+                        <div class="ui card">
+                            <div class="content">
+                                <div class="header">Strumenti <i class="ui right floated pencil icon"></i></div>
+                            </div>
+                            <div class="content">
+                                <div class="ui two vertical buttons">
+                                    <a href="{% url 'blog:create' %}" class="ui fluid blue button">Aggiungi</a>
+                                    {% if object_list|length > 0 %}
+                                        <div class="ui fluid yellow button" id="edit-button">Mofifica</div>
+                                    {% endif %}
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    {% endif %}
+
+                    <!-- Tag Widget -->
+                    {% if tags|length > 0 %}
+                        <div class="ui card">
+                            <div class="content">
+                                <div class="header">Tag <i class="ui right floated tag icon"></i></div>
+                            </div>
+                            <div class="content">
+                                <div class="ui tag labels">
+                                    {% for tag in tags %}
+                                        <a class="ui label"
+                                           href="/?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}tag={{ tag }}">{{ tag }}</a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
                 </div>
-            {% endif %}
-
-            {#            <!-- Side Widget -->#}
-            {#            <div class="card my-4">#}
-            {#                <h5 class="card-header"></h5>#}
-            {#                <div class="card-block">#}
-            {#                </div>#}
-            {#            </div>#}
-
+            </div>
         </div>
     </div>
 {% endblock %}
