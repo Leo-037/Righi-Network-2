@@ -8,132 +8,131 @@
 {% block head_extra %}
 {% endblock head_extra %}
 
+{% block breadcrumb %}
+    <a class="section" href="{{ BASE_DIR }}/">Home</a>
+    {#    <i class="right angle icon divider"></i>#}
+    {#    <div class="active section">{{ instance.title }}</div>#}
+{% endblock %}
+
 {% block content %}
-    <nav class="breadcrumb">
-        <span class="breadcrumb-item active"><a href="/">Home</a></span>
-        <span class="breadcrumb-item">{{ instance.title }}</span>
-    </nav>
-    <div class="row">
-        <div class="col-lg-8">
+    <div class="ui stackable two column divided grid">
+        <div class="row">
+            <div class="eleven wide column">
 
-            <!-- Title -->
-            <h1 class="mt-4">{{ instance.title }}</h1>
+                <div class="ui internally celled grid">
 
-            <!-- Author -->
-            <p class="lead">
-                di <a
-                    href="/?q={{ instance.user.first_name|lower }}+{{ instance.user.last_name|lower }}&next={% url 'blog:detail' instance.slug %}">{{ instance.user.first_name }} {{ instance.user.last_name }}</a>
-            </p>
-
-            <hr>
-
-            <!-- Date/Time -->
-            <p>Postato il {{ instance.publish }}</p>
-
-            <hr>
-
-            <!-- Preview Image -->
-            {% if instance.image %}
-                <img class="img-fluid rounded" src="{{ instance.image.url }}" alt="">
-                <hr>
-            {% endif %}
-
-            <!-- Post Content -->
-            {{ instance.content|safe }}
-
-            {% if instance.tags.all|length > 0 %}
-                <hr/>
-                Tag:
-                {% for tag in instance.tags.all %}
-                    <a href="/?tag={{ tag }}">{{ tag }}</a> {% if user.is_superuser or user.studente.is_rapistituto %}
-                    [<a class="text-danger"
-                        href="{% url "blog:remove-tag" instance.slug tag %}?next={% url "blog:detail" instance.slug %}"><i
-                            class="fa fa-close"></i></a>]{% endif %}
-                    {% if forloop.counter < instance.tags.all|length %}/{% endif %}
-                {% endfor %}
-            {% endif %}
-
-        </div>
-        <div class="col-md-4">
-
-            <!-- Edit Widget -->
-            {% if user.studente.is_rapistituto or user.is_superuser %}
-                <div class="card my-4">
-                    <h5 class="card-header">Post</h5>
-                    <div class="card-block">
-                        <a href="{% url "blog:update" instance.slug %}" class="btn btn-warning btn-block" role="button">Modifica</a>
-                        <a href="{% url "blog:delete" instance.slug %}" class="btn btn-danger btn-block" role="button">Elimina</a>
-                        <hr/>
-                        <form onsubmit="window.location = './add_tag/' + tag.value; return false;">
-                            <div class="input-group">
-                                <input class="form-control" id="tag" placeholder="Tag" type="text" name="tag" value=""
-                                       required>
-                                <span class="input-group-btn">
-				                <button class="btn btn-success" type="submit"><i
-                                        class="fa fa-plus"></i></button>
-				            </span>
-                            </div>
-                        </form>
-
-                    </div>
-                </div>
-            {% endif %}
-
-            <!-- Search Widget -->
-            <div class="card my-4">
-                <h5 class="card-header">Cerca</h5>
-                <div class="card-block">
-                    <form onsubmit="window.location = '/?q=' + search.value; return false;">
-                        <div class="input-group">
-                            <input class="form-control" id="search" placeholder='...' type="search" name="search"
-                                   value="" required>
-                            <span class="input-group-btn">
-				                <button class="btn btn-primary" type="submit">Cerca <i
-                                        class="fa fa-search"></i></button>
-				            </span>
+                    <div class="row">
+                        <div class="column">
+                            <div class="ui right floated small header">Postato il {{ instance.publish }} da <a
+                                    href="/?q={{ instance.user.first_name|lower }}+{{ instance.user.last_name|lower }}&next={% url 'blog:detail' instance.slug %}">
+                                {{ instance.user.first_name }} {{ instance.user.last_name }}</a></div>
                         </div>
-                    </form>
+                    </div>
+
+                    {% if instance.image %}
+                        <div class="row">
+                            <div class="column">
+                                <img class="fluid image" src="{{ instance.image.url }}" alt="">
+                                <div class="ui divider"></div>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    <div class="row">
+                        <div class="column">
+                            {{ instance.content|safe }}
+                        </div>
+                    </div>
+
+                    {% if instance.tags.all|length > 0 %}
+                        <div class="row">
+                            <div class="column">
+                                <div class="ui tag labels">
+                                    {% for tag in instance.tags.all %}
+                                        <div class="ui label large header" href="/?tag={{ tag }}">{{ tag }}
+                                            {% if user.is_superuser or user.studente.is_rapistituto %}
+                                                <a class="detail"
+                                                   href="{% url "blog:remove-tag" instance.slug tag %}?next=/"><i
+                                                        class="ui red close icon"></i></a>
+                                            {% endif %}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
 
-            <!-- Tag Widget -->
-            {% if instance.tags.all|length > 0 %}
-                <div class="card my-4">
-                    <h5 class="card-header">Tag</h5>
-                    <div class="card-block">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <ul class="list-unstyled mb-0">
-                                    {% for tag in tags %}
-                                        {% if not forloop.counter|divisibleby:2 %}
-                                            <li><a href="/?tag={{ tag }}">{{ tag }}</a></li>
-                                        {% endif %}
-                                    {% endfor %}
-                                </ul>
+            <!-- colonna di destra -->
+            <div class="five wide column">
+
+                <div class="ui stackable green fluid cards">
+
+                    <!-- Edit Widget -->
+                    {% if user.studente.is_rapistituto or user.is_superuser %}
+                        <div class="ui card">
+                            <div class="content">
+                                <div class="header">Strumenti <i class="ui right floated pencil icon"></i></div>
                             </div>
-                            <div class="col-md-6">
-                                <ul class="list-unstyled mb-0">
-                                    {% for tag in tags %}
-                                        {% if forloop.counter|divisibleby:2 %}
-                                            <li><a href="/?tag={{ tag }}">{{ tag }}</a></li>
-                                        {% endif %}
-                                    {% endfor %}
-                                </ul>
+                            <div class="content">
+                                <div class="ui two vertical buttons">
+                                    <a href="{% url "blog:update" instance.slug %}" class="ui fluid yellow button">Modifica</a>
+                                    <div data-href="{% url "blog:delete" instance.slug %}"
+                                         class="ui fluid negative button delete-button">Elimina
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="extra content">
+                                <form onsubmit="window.location = './add_tag/' + tag.value; return false;">
+                                    <div class="ui right labeled fluid active input">
+                                        <input class="" id="tag" placeholder="Aggiungi Tag"
+                                               name="tag"
+                                               value=""
+                                               required>
+                                        <button class="ui tag label icon button"><i class="ui add icon"></i>
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
+                    {% endif %}
+
+                    <!-- Search Widget -->
+                    <div class="ui card">
+                        <div class="content">
+                            <div class="header">Cerca <i class="ui right floated question icon"></i></div>
+                        </div>
+                        <div class="content">
+                            <form onsubmit="window.location = '/?q=' + search.value; return false;">
+                                <div class="ui action fluid input">
+                                    <input placeholder='Cerca tra i post' type="search"
+                                           name="search"
+                                           value="" required>
+                                    <button class="ui icon button"><i class="ui search icon"></i></button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
+
+                    <!-- Tag Widget -->
+                    {% if tags|length > 0 %}
+                        <div class="ui card">
+                            <div class="content">
+                                <div class="header">Tag <i class="ui right floated tag icon"></i></div>
+                            </div>
+                            <div class="content">
+                                <div class="ui tag labels">
+                                    {% for tag in tags %}
+                                        <a class="ui label"
+                                           href="/?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}tag={{ tag }}">{{ tag }}</a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
                 </div>
-            {% endif %}
-
-            {#            <!-- Side Widget -->#}
-            {#            <div class="card my-4">#}
-            {#                <h5 class="card-header"></h5>#}
-            {#                <div class="card-block">#}
-            {#                </div>#}
-            {#            </div>#}
-
+            </div>
         </div>
     </div>
-    <!-- /.row -->
-
 {% endblock content %}

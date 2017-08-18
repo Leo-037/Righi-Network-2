@@ -5,18 +5,23 @@
     {{ form.media }}
 {% endblock head_extra %}
 
+{% block breadcrumb %}
+    <a class="section" href="{{ BASE_DIR }}/">Home</a>
+    <i class="right angle icon divider"></i>
+    {% if instance %}
+        <a class="section" href="{% url "blog:detail" instance.slug %}">{{ instance.title }}</a>
+        <i class="right angle icon divider"></i>
+        <div class="active section">Modifica</div>
+    {% else %}
+        <div class="active section">Aggiungi Post</div>
+    {% endif %}
+{% endblock %}
 
 {% block content %}
-    <div class="row">
-        <div class='col-6'>
-            <h1 class="text-primary">Post</h1>
-            <hr/>
-            <form method='POST' action='' enctype='multipart/form-data'>
-                {% csrf_token %}
-                {{ form|crispy }}
-                <input type='submit' class='btn btn-primary' value='Aggiungi Post'/>
-            </form>
-            <br>
-        </div>
-    </div>
+    <form class="ui equal width form" method='POST' action='' enctype='multipart/form-data'>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type='submit' class='ui green button' value='Aggiungi Post'/>
+    </form>
+    <div class="ui hidden divider"></div>
 {% endblock content %}
