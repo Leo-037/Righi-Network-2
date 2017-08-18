@@ -16,71 +16,71 @@ ALLOWED_HOSTS = ['127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.sites',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
+	'django.contrib.admin',
+	'django.contrib.auth',
+	'django.contrib.contenttypes',
+	'django.contrib.sessions',
+	'django.contrib.sites',
+	'django.contrib.messages',
+	'django.contrib.staticfiles',
 
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
+	'allauth',
+	'allauth.account',
+	'allauth.socialaccount',
 
-    'allauth.socialaccount.providers.facebook',
-    # 'allauth.socialaccount.providers.google',
-    # 'allauth.socialaccount.providers.instagram',
+	'allauth.socialaccount.providers.facebook',
+	# 'allauth.socialaccount.providers.google',
+	# 'allauth.socialaccount.providers.instagram',
 
-    'crispy_forms',
-    'django_summernote',
-    'hijack',
-    'compat',
-    'hijack_admin',
-    'markdown_deux',
-    'silk',
-    "taggit",
+	'crispy_forms',
+	'django_summernote',
+	'hijack',
+	'compat',
+	'hijack_admin',
+	'markdown_deux',
+	'silk',
+	"taggit",
 
-    'accounts',
-    'blog',
+	'accounts',
+	'blog',
 ]
 
 MIDDLEWARE = [
-    'silk.middleware.SilkyMiddleware',
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+	'silk.middleware.SilkyMiddleware',
+	'django.middleware.security.SecurityMiddleware',
+	'django.contrib.sessions.middleware.SessionMiddleware',
+	'django.middleware.common.CommonMiddleware',
+	'django.middleware.csrf.CsrfViewMiddleware',
+	'django.contrib.auth.middleware.AuthenticationMiddleware',
+	'django.contrib.messages.middleware.MessageMiddleware',
+	'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
 LOGIN_EXEMPT_URLS = (
-    r'^account/',
+	r'^account/',
 )
 
 ROOT_URLCONF = 'righinetwork.urls'
 
 TEMPLATES = [
-    {
-        "BACKEND": "django.template.backends.django.DjangoTemplates",
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
-        "APP_DIRS": True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ]
-        }
-    }
+	{
+		"BACKEND": "django.template.backends.django.DjangoTemplates",
+		'DIRS': [os.path.join(BASE_DIR, 'templates')],
+		"APP_DIRS": True,
+		'OPTIONS': {
+			'context_processors': [
+				'django.template.context_processors.debug',
+				'django.template.context_processors.request',
+				'django.contrib.auth.context_processors.auth',
+				'django.contrib.messages.context_processors.messages',
+			]
+		}
+	}
 ]
 
 AUTHENTICATION_BACKENDS = (
-    'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
+	'django.contrib.auth.backends.ModelBackend',
+	'allauth.account.auth_backends.AuthenticationBackend',
 )
 
 WSGI_APPLICATION = 'righinetwork.wsgi.application'
@@ -88,27 +88,27 @@ WSGI_APPLICATION = 'righinetwork.wsgi.application'
 # Database
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'RighinetworkDB'),
-    }
+	'default': {
+		'ENGINE': 'django.db.backends.sqlite3',
+		'NAME': os.path.join(BASE_DIR, 'RighinetworkDB'),
+	}
 }
 
 # Password validation
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+	{
+		'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+	},
+	{
+		'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+	},
+	{
+		'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+	},
+	{
+		'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+	},
 ]
 
 LOGIN_URL = '/accounts/login/'
@@ -119,29 +119,29 @@ SITE_ID = 1
 LOGIN_REDIRECT_URL = '/'
 SOCIALACCOUNT_QUERY_EMAIL = True
 SOCIALACCOUNT_PROVIDERS = {
-    'facebook': {
-        'METHOD': 'oauth2',
-        'SCOPE': ['email', 'public_profile', 'user_friends'],
-        'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
-        'INIT_PARAMS': {'cookie': True},
-        'FIELDS': [
-            'id',
-            'email',
-            'name',
-            'first_name',
-            'last_name',
-            'verified',
-            'locale',
-            'timezone',
-            'link',
-            'gender',
-            'updated_time',
-        ],
-        'EXCHANGE_TOKEN': True,
-        'LOCALE_FUNC': lambda request: 'it',
-        'VERIFIED_EMAIL': False,
-        'VERSION': 'v2.9',
-    }
+	'facebook': {
+		'METHOD': 'oauth2',
+		'SCOPE': ['email', 'public_profile', 'user_friends'],
+		'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
+		'INIT_PARAMS': {'cookie': True},
+		'FIELDS': [
+			'id',
+			'email',
+			'name',
+			'first_name',
+			'last_name',
+			'verified',
+			'locale',
+			'timezone',
+			'link',
+			'gender',
+			'updated_time',
+		],
+		'EXCHANGE_TOKEN': True,
+		'LOCALE_FUNC': lambda request: 'it',
+		'VERIFIED_EMAIL': False,
+		'VERSION': 'v2.9',
+	}
 }
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = "username_email"
@@ -168,9 +168,9 @@ HIJACK_LOGOUT_REDIRECT_URL = '/admin/auth/user/'
 HIJACK_USE_BOOTSTRAP = True
 HIJACK_ALLOW_GET_REQUESTS = True
 
-# Impostazioni Cripsy Forms
-
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
+# # Impostazioni Cripsy Forms
+#
+# CRISPY_TEMPLATE_PACK = 'semantic-ui'
 
 # Impostazioni Taggit
 
@@ -193,7 +193,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),
+	os.path.join(BASE_DIR, "static"),
 ]
 
 STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static_cdn")

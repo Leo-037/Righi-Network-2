@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% load humanize %}
 
 {% block title %}
     {{ title }}
@@ -22,21 +21,17 @@
     </script>
 {% endblock head_extra %}
 
+{% block breadcrumb %}
+    <div class="active section">Home</div>
+{% endblock breadcrumb %}
+
 {% block content %}
-
-    <!-- breadcrumb -->
-    <div class="ui green clearing segment">
-        <div class="ui large breadcrumb">
-            <div class="active section">Home</div>
-        </div>
-    </div>
-
-
     <div class="ui stackable two column grid">
 
         <!-- barra di ricerca -->
         <div class="divided row">
             <div class="eleven wide column">
+
                 <!-- search -->
                 <div class="ui action fluid input">
                     <input id="search" placeholder="Cerca">
@@ -51,6 +46,7 @@
                     {% endif %}
                 </div>
             </div>
+
             <!-- parole e tag cercati -->
             {% if request.GET.q or request.GET.tag %}
                 <div class="five wide column">
@@ -66,7 +62,6 @@
                 </div>
             {% endif %}
         </div>
-
 
         <!-- contenuto pagina -->
         <div class="row">
@@ -92,16 +87,16 @@
                                                class="ui yellow button">Modifica</a>
                                             /
                                             <div data-href="{% url "blog:delete" post.slug %}"
-                                                 class="ui red button delete-button" id="">Elimina
+                                                 class="ui red button delete-button">Elimina
                                             </div>
                                         </div>
                                     </div>
                                 {% endif %}
 
                                 {% if post.image %}
-                                    <div class="image">
-                                        {{ post.image }}
-                                    </div>
+                                    <a class="rounded image" href="{{ post_url }}">
+                                        <img src='{{ post.image.url }}'>
+                                    </a>
                                 {% endif %}
 
                                 <div class="content">
@@ -127,7 +122,7 @@
 
                                 <div class="content">
                                     <div class="description">
-                                        <h4>{{ post.content|truncatewords_html:100|safe }}</h4>
+                                        <h4>{{ post.content|truncatewords_html:80|safe }}</h4>
                                     </div>
                                 </div>
 
@@ -157,23 +152,24 @@
 
                     <!-- Pagination -->
                     {% if object_list.has_other_pages %}
-                        <br>
-                        <div class="ui centered pagination menu">
-                            {% for i in object_list.paginator.page_range %}
-                                {% if object_list.number == i %}
-                                    <a class="active item">{{ i }}</a>
-                                {% else %}
-                                    <a class="item" href="?page={{ i }}">{{ i }}</a>
-                                {% endif %}
-                            {% endfor %}
+                        <div class="ui horizontal divider">
+                            <div class="ui pagination menu">
+                                {% for i in object_list.paginator.page_range %}
+                                    {% if object_list.number == i %}
+                                        <a class="active item">{{ i }}</a>
+                                    {% else %}
+                                        <a class="item" href="?page={{ i }}">{{ i }}</a>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
                         </div>
                     {% endif %}
-
+                    <br>
                 {% else %}
                     {% if not user.studente.is_rapistituto and not user.is_superuser %}
                         <hr>
                     {% endif %}
-                    <h1 class="ui orange centered header"><i>Non ci sono comunicazioni</i></h1>
+                    <div class="ui orange centered huge header"><i>Non ci sono comunicazioni</i></div>
                 {% endif %}
             </div>
 
@@ -191,7 +187,7 @@
                                 <div class="ui two vertical buttons">
                                     <a href="{% url 'blog:create' %}" class="ui fluid blue button">Aggiungi</a>
                                     {% if object_list|length > 0 %}
-                                        <div class="ui fluid yellow button" id="edit-button">Mofifica</div>
+                                        <div class="ui fluid yellow button edit-button">Mofifica</div>
                                     {% endif %}
                                 </div>
                             </div>
