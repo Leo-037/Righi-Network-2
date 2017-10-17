@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block head_extra %}
+{% endblock head_extra %}
+
+{% block breadcrumb %}
+    <a class="section" href="{{ BASE_DIR }}/">Home</a>
+{% endblock %}
+
+{% block content %}
+    <br>
+    <div class="ui stackable two column grid">
+        <div class="row">
+            <div class="{% if user.is_superuser or user.studente.is_rapistituto %}eleven{% else %}sixteen{% endif %} wide column">
+
+                <div class="ui raised stackable green cards">
+                    {% for assemblea in assemblee %}
+
+                        {% if assemblea.mostra or user.is_superuser or user.studente.is_rapistituto %}
+
+                            <div class="ui fluid card">
+
+                                {% if user.is_superuser or user.studente.is_rapistituto %}
+                                    <div class="edit">
+                                        <div class="ui two top attached buttons">
+                                            <a href="{% url "assemblee:update_assemblea" assemblea.id %}"
+                                               class="ui yellow button">Modifica</a>
+                                            /
+                                            <div data-href="{% url "assemblee:delete_assemblea" assemblea.id %}"
+                                                 class="ui red button delete-button">Elimina
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                                <div class="content">
+                                    <div class="ui right floated big labels">
+                                        {% if assemblea.data > today %}
+                                            <div class="ui purple label">Futura</div>
+                                        {% endif %}
+                                        {% if assemblea.data < today %}
+                                            <div class="ui teal label">Passata</div>
+                                        {% endif %}
+                                        {% if assemblea.mostra %}
+                                            <div class="ui green label">Visibile</div>
+                                        {% else %}
+                                            <div class="ui red label">Nascosta</div>
+                                        {% endif %}
+                                        {% if assemblea.iscrizioni_aperte %}
+                                            <div class="ui green label">Iscrizioni aperte</div>
+                                        {% else %}
+                                            <div class="ui red label">Iscrizioni chiuse</div>
+                                        {% endif %}
+                                    </div>
+                                    <a href="{% url "assemblee:assemblea" assemblea.id %}">
+                                        <div class="ui huge blue header">
+                                            {{ assemblea.data }}
+                                        </div>
+                                    </a>
+                                    <div class="meta">
+                                        <div class="ui large grey header"><span><i
+                                                class="ui marker arrow icon"></i></span> {{ assemblea.sede }}</div>
+                                    </div>
+                                </div>
+
+                                {% if user.is_superuser or user.studente.is_rapistituto %}
+                                    <div class="edit">
+                                        <div class="ui two bottom attached buttons">
+                                            {% if not assemblea.iscrizioni_aperte %}
+                                                <a href="{% url "assemblee:apri_iscrizioni" assemblea.id %}"
+                                                   class="ui green {% if not assemblea.mostra %}disabled {% endif %}button">Apri
+                                                    iscrizioni</a>
+                                            {% else %}
+                                                <a href="{% url "assemblee:chiudi_iscrizioni" assemblea.id %}"
+                                                   class="ui orange button">Chiudi iscrizioni</a>
+                                            {% endif %}
+                                            {% if not assemblea.mostra %}
+                                                <a href="{% url "assemblee:mostra_assemblea" assemblea.id %}"
+                                                   class="ui green button">Mostra assemblea</a>
+                                            {% else %}
+                                                <a href="{% url "assemblee:nascondi_assemblea" assemblea.id %}"
+                                                   class="ui orange button">Nacondi assemblea</a>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                            </div>
+                        {% else %}
+                            <div class="ui huge orange header">Non ci sono assemblee</div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            {% if user.studente.is_rapistituto or user.is_superuser %}
+                <div class="five wide column">
+                    <div class="ui stackable green cards">
+                        <div class="ui fluid card">
+                            <div class="content">
+                                <div class="header">Strumenti <i class="ui right floated pencil icon"></i></div>
+                            </div>
+                            <div class="content">
+                                <div class="ui two vertical buttons">
+                                    <a href="{% url 'assemblee:create_assemblea' %}"
+                                       class="ui fluid blue button">Aggiungi assemblea</a>
+                                    {% if assemblee|length > 0 %}
+                                        <div class="ui fluid yellow button edit-button">Mofifica</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock content %}

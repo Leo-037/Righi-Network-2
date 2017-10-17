@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block head_extra %}
+{% endblock head_extra %}
+
+{% block breadcrumb %}
+    <a class="section" href="{{ BASE_DIR }}/">Home</a>
+    <i class="right angle icon divider"></i>
+    <div class="active section">Assemblee</div>
+{% endblock %}
+
+{% block content %}
+    <form enctype="multipart/form-data" action="" method="POST">
+        {% csrf_token %}
+        {{ form }}
+        <input class="btn btn-primary" id="submit" type="submit" value="{{ title }}">
+    </form>
+{% endblock content %}

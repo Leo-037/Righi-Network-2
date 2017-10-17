@@ -48,11 +48,15 @@
         .edit {
             display: none;
         }
+
+        .no-padding {
+            padding: 0 !important;
+        }
     </style>
     <script>
         $(document).ready(function () {
             $('.main.sidebar')
-                .sidebar('setting', 'transition', 'push') //overlay
+                .sidebar('setting', 'transition', 'overlay') // push
                 .sidebar('attach events', '#open-main-sidebar')
             ;
             $('.dropdown').dropdown()
@@ -78,6 +82,9 @@
                     .modal('show')
             })
             ;
+            $('.ui.accordion')
+                .accordion()
+            ;
         })
     </script>
 
@@ -85,13 +92,14 @@
 </head>
 
 <body>
+
 <!-- sidebar -->
 <div class="ui main inverted vertical menu sidebar">
     <div class="item">
         <a class="ui logo icon image" href="/">
             {#            <img src="{% static 'righinetwork/r2.png' %}">#}
         </a>
-        <a href="{{ BASE_DIR }}"><b>Righi-Network</b></a>
+        <a href="{{ BASE_DIR }}/"><b>Righi-Network</b></a>
     </div>
     {% if user.studente.is_rapistituto or user.is_superuser %}
         <div class="item">
@@ -101,16 +109,11 @@
                     <a href="{% url "admin:index" %}" class="item">Admin</a>
                 {% endif %}
                 <a href="{% url "accounts:gestione" %}" class="item">Classi/Studenti</a>
-
             </div>
         </div>
     {% endif %}
-    <a href="" class="item"><b>Settimana dei recuperi</b></a>
+    <a href="{% url "assemblee:all_assemblee" %}" class="item"><b>Assemblee d'istituto</b></a>
 </div>
-
-<footer>
-
-</footer>
 
 <div class="pusher">
 
@@ -120,24 +123,26 @@
             <i class="content icon"></i>
         </a>
 
-        <a class="active item" href="{{ BASE_DIR }}">
+        <a class="active item" href="{{ BASE_DIR }}/">
             Righi-Network
         </a>
 
-        <div class="right borderless menu">
-            <div class="vertically fitted item">
-                <div href="#" class="ui dropdown item" id="user-dropdown">
-                    {{ user.first_name }} <i class="dropdown icon"></i>
-                    <div class="menu">
-                        <div class="header">Impostazioni</div>
-                        <a class="item" href="{% url 'account_email' %}">E-mail</a>
-                        <a class="item" href="{% url 'account_reset_password' %}">Password</a>
-                        <div class="divider"></div>
-                        <a class="item" href="{% url 'account_logout' %}">Esci</a>
+        {% if user.is_authenticated %}
+            <div class="right borderless menu">
+                <div class="vertically fitted item">
+                    <div href="#" class="ui dropdown item" id="user-dropdown">
+                        {{ user.first_name }} <i class="dropdown icon"></i>
+                        <div class="menu">
+                            <div class="header">Impostazioni</div>
+                            <a class="item" href="{% url 'account_email' %}">E-mail</a>
+                            <a class="item" href="{% url 'account_reset_password' %}">Password</a>
+                            <div class="divider"></div>
+                            <a class="item" href="{% url 'account_logout' %}">Esci</a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        {% endif %}
     </div>
 
     <br><br><br>
@@ -163,24 +168,19 @@
             </div>
         {% endfor %}
 
-        <!-- breadcrumb e titolo -->
-        <div class="ui two column middle aligned stackable grid">
-            <div class="row">
-                <div class="left floated column">
-                    <div class="ui large breadcrumb">
-                        {% block breadcrumb %}
-                        {% endblock breadcrumb %}
-                    </div>
-                </div>
-                <div class="right floated right aligned column">
-                    <div class="ui large green header">
-                        {% if title %}{{ title }}{% else %}&zwnj;{% endif %}
-                    </div>
-                </div>
+        <div class="ui basic clearing segment no-padding">
+            <div class="ui large breadcrumb">
+                {% block breadcrumb %}
+                {% endblock breadcrumb %}
             </div>
+            <div class="ui fitted divider"></div>
+            {% if title %}
+                <div class="ui large green right floated header">
+                    {{ title }}
+                </div>
+            {% endif %}
         </div>
-        <div class="ui top fitted divider"></div>
-        <br>
+
 
         {% block content %}
         {% endblock content %}
@@ -188,6 +188,8 @@
         {% block extra_body %}
         {% endblock extra_body %}
 
+
+        <!-- modal eliminazione -->
         <div class="ui basic animated modal" id="delete-modal">
             <div class="ui icon header">
                 <i class="delete icon"></i>
@@ -209,6 +211,14 @@
         </div>
     </div>
 </div>
+
+<!-- TODO: in post_list.html e post_detail.html sostuire fluid da cards nelle card singole -->
+<!-- TODO: in post_list.html aggiungere "ui labels" nei singoli post (come nelle assemblee) -->
+<!-- TODO: controllare in post_list.html cosa fare quando non ci sono tag -->
+<!-- TODO: in post_list.html cambiare header <h#> nella giusta classe di ui header (eventualmente cambiarne il colore) -->
+<!-- TODO: controllare in TUTTI i file .html i controlli se l'utente è admin o rappresentante -->
+<!-- TODO: rimuovere ogni riferimento a crispy forms -->
+<!-- TODO: mettere .no-padding dove serve -->
 
 </body>
 </html>
