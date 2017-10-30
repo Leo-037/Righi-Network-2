@@ -10,6 +10,10 @@
     <i class="right angle icon divider"></i>
     <a class="section" href="{% url "assemblee:assemblea" gruppo.turno.assemblea.id %}">Assemblea
         del {{ gruppo.turno.assemblea.data }}</a>
+    <i class="right angle icon divider"></i>
+    <a class="section" href="{% url "assemblee:turno" gruppo.turno.assemblea.id gruppo.turno.id %}">Turno
+        delle {{ gruppo.turno.inizio }}
+        - {{ gruppo.turno.fine }}</a>
 {% endblock %}
 
 {% block content %}
@@ -112,11 +116,8 @@
                                 </div>
                                 <div class="content">
                                     <div class="ui two vertical buttons">
-                                        <a href="{% url 'assemblee:create_gruppo' assemblea.id turno.id %}"
-                                           class="ui fluid blue button">Aggiungi gruppo</a>
-                                        {% if gruppi|length > 0 %}
-                                            <div class="ui fluid yellow button edit-button">Mofifica gruppi</div>
-                                        {% endif %}
+                                        <a href="{% url 'assemblee:update_gruppo' assemblea.id turno.id gruppo.id %}"
+                                           class="ui fluid yellow button">Modifica gruppo</a>
                                     </div>
                                 </div>
                                 <div class="content">

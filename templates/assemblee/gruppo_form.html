@@ -1,18 +1,36 @@
 {% extends "base.html" %}
 
 {% block head_extra %}
+    {{ form.media }}
 {% endblock head_extra %}
 
 {% block breadcrumb %}
     <a class="section" href="{{ BASE_DIR }}/">Home</a>
     <i class="right angle icon divider"></i>
-    <div class="active section">Assemblee</div>
+    <a class="section" href="{% url "assemblee:all_assemblee" %}">Assemblee</a>
+    <i class="right angle icon divider"></i>
+    <a class="section" href="{% url "assemblee:assemblea" gruppo.turno.assemblea.id %}">Assemblea
+        del {{ gruppo.turno.assemblea.data }}</a>
+    <i class="right angle icon divider"></i>
+    {% if gruppo %}
+        <a class="section" href="{% url "assemblee:turno" gruppo.turno.assemblea.id gruppo.turno.id %}">Turno
+            delle {{ gruppo.turno.inizio }}
+            - {{ gruppo.turno.fine }}</a>
+        <i class="right angle icon divider"></i>
+        <a class="section"
+           href="{% url "assemblee:gruppo" gruppo.turno.assemblea.id gruppo.turno.id gruppo.id %}">{{ gruppo.titolo }}</a>
+        <i class="right angle icon divider"></i>
+        <div class="active section">Modifica</div>
+    {% else %}
+        <div class="active section">{{ title }}</div>
+    {% endif %}
 {% endblock %}
 
 {% block content %}
-    <form enctype="multipart/form-data" action="" method="POST">
+    <form class="ui equal width form" method='POST' action='' enctype='multipart/form-data'>
         {% csrf_token %}
-        {{ form }}
-        <input class="btn btn-primary" id="submit" type="submit" value="{{ title }}">
+        {{ form.as_p }}
+        <input type='submit' class='ui green button' value='{{ title }}'/>
     </form>
+    <div class="ui hidden divider"></div>
 {% endblock content %}

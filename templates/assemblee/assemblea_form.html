@@ -1,19 +1,29 @@
 {% extends "base.html" %}
-{% load crispy_forms_tags %}
 
 {% block head_extra %}
+    {{ form.media }}
 {% endblock head_extra %}
 
 {% block breadcrumb %}
     <a class="section" href="{{ BASE_DIR }}/">Home</a>
     <i class="right angle icon divider"></i>
-    <div class="active section">Assemblee</div>
+    <a class="section" href="{% url "assemblee:all_assemblee" %}">Assemblee</a>
+    <i class="right angle icon divider"></i>
+    {% if assemblea %}
+        <a class="section" href="{% url "assemblee:assemblea" assemblea.id %}">Assemblea
+            del {{ assemblea.data }}</a>
+        <i class="right angle icon divider"></i>
+        <div class="active section">Modifica</div>
+    {% else %}
+        <div class="active section">{{ title }}</div>
+    {% endif %}
 {% endblock %}
 
 {% block content %}
-    <form enctype="multipart/form-data" action="" method="POST">
+    <form class="ui equal width form" method='POST' action='' enctype='multipart/form-data'>
         {% csrf_token %}
-        {{ form|crispy }}
-        <input class="btn btn-primary" id="submit" type="submit" value="{{ title }}">
+        {{ form.as_p }}
+        <input type='submit' class='ui green button' value='{{ title }}'/>
     </form>
+    <div class="ui hidden divider"></div>
 {% endblock content %}

@@ -31,10 +31,11 @@ def create_assemblea_view(request):
 def create_turno_view(request, id_assemblea, n_turni):
 	if request.user.studente.is_rapistituto or request.user.is_superuser:
 		if request.method == "GET":
-			assemblea = Assemblea.objects.get(pk = id_assemblea)
+			assemblea = Assemblea.objects.get(id = id_assemblea)
 			form = TurnoForm(initial = {'assemblea': assemblea})
 			form.fields['assemblea'].widget = forms.HiddenInput()
-			return render(request, 'assemblee/turno_form.html', {'title': "Aggiungi Turno", 'form': form})
+			return render(request, 'assemblee/turno_form.html',
+			              {'title': "Aggiungi Turno", 'form': form, 'assemblea': assemblea})
 		elif request.method == "POST":
 			form = TurnoForm(request.POST)
 			form.save()
@@ -51,7 +52,7 @@ def create_turno_view(request, id_assemblea, n_turni):
 def create_gruppo_view(request, id_assemblea, id_turno):
 	if request.user.studente.is_rapistituto or request.user.is_superuser:
 		if request.method == "GET":
-			turno = Turno.objects.get(pk = id_turno)
+			turno = Turno.objects.get(id = id_turno)
 			form = GruppoForm(initial = {'turno': turno})
 			form.fields['turno'].widget = forms.HiddenInput()
 			return render(request, 'assemblee/gruppo_form.html', {'title': "Aggiungi Gruppo", 'form': form})
@@ -59,7 +60,7 @@ def create_gruppo_view(request, id_assemblea, id_turno):
 			form = GruppoForm(request.POST)
 			form.save()
 
-			turno = Turno.objects.get(pk = id_turno)
+			turno = Turno.objects.get(id = id_turno)
 			return redirect("assemblee:turno", id_assemblea, turno.id)
 	raise Http404
 
@@ -84,7 +85,7 @@ def assemblea_view(request, id_assemblea):
 	if not request.user.studente.is_attivato:
 		raise Http404
 
-	assemblea = Assemblea.objects.get(pk = id_assemblea)
+	assemblea = Assemblea.objects.get(id = id_assemblea)
 	if not assemblea.mostra and not (request.user.studente.is_rapistituto or request.user.is_superuser):
 		raise Http404
 
@@ -104,11 +105,11 @@ def turno_view(request, id_assemblea, id_turno):
 	if not request.user.studente.is_attivato:
 		raise Http404
 
-	assemblea = Assemblea.objects.get(pk = id_assemblea)
+	assemblea = Assemblea.objects.get(id = id_assemblea)
 	if not assemblea.mostra and not (request.user.studente.is_rapistituto or request.user.is_superuser):
 		raise Http404
 
-	turno = Turno.objects.get(pk = id_turno)
+	turno = Turno.objects.get(id = id_turno)
 	gruppi = Gruppo.objects.filter(turno = turno)
 	gruppo_iscritto = None
 
@@ -131,11 +132,11 @@ def gruppo_view(request, id_assemblea, id_turno, id_gruppo):
 	if not request.user.studente.is_attivato:
 		raise Http404
 
-	assemblea = Assemblea.objects.get(pk = id_assemblea)
+	assemblea = Assemblea.objects.get(id = id_assemblea)
 	if not assemblea.mostra and not (request.user.studente.is_rapistituto or request.user.is_superuser):
 		raise Http404
 
-	gruppo = Gruppo.objects.get(pk = id_gruppo)
+	gruppo = Gruppo.objects.get(id = id_gruppo)
 
 	iscritti = Iscritto.objects.filter(gruppo = gruppo).order_by("studente__classe", "studente__sezione",
 	                                                             "studente__user__last_name")
@@ -147,7 +148,7 @@ def gruppo_view(request, id_assemblea, id_turno, id_gruppo):
 	if request.method == "POST":
 		da_discrivere = request.POST.getlist('iscritto_da_cancellare')
 		for id in da_discrivere:
-			iscritto = Iscritto.objects.get(pk = id)
+			iscritto = Iscritto.objects.get(id = id)
 			gruppo.iscritti -= 1
 			iscritto.delete()
 			gruppo.save()
@@ -168,18 +169,18 @@ def gruppo_view(request, id_assemblea, id_turno, id_gruppo):
 def update_assemblea_view(request, id_assemblea):
 	if not request.user.studente.is_rapistituto and not request.user.is_superuser:
 		raise Http404
-	instance = get_object_or_404(Assemblea, pk = id_assemblea)
-	form = AssembleaForm(request.POST or None, request.FILES or None, instance = instance, initial = {'n_turni': 0})
+	assemblea = get_object_or_404(Assemblea, id = id_assemblea)
+	form = AssembleaForm(request.POST or None, request.FILES or None, instance = assemblea, initial = {'n_turni': 0})
 	form.fields['n_turni'].widget = forms.HiddenInput()
 	if form.is_valid():
-		instance = form.save(commit = False)
-		instance.save()
+		assemblea = form.save(commit = False)
+		assemblea.save()
 		messages.success(request, "Assemblea salvata", extra_tags = 'html_safe')
 		return redirect("assemblee:assemblea", id_assemblea)
 
 	context = {
 		"title": "Modifica assemblea",
-		"instance": instance,
+		"assemblea": assemblea,
 		"form": form,
 	}
 	return render(request, "assemblee/assemblea_form.html", context)
@@ -189,7 +190,8 @@ def update_assemblea_view(request, id_assemblea):
 def update_turno_view(request, id_assemblea, id_turno):
 	if not request.user.studente.is_rapistituto and not request.user.is_superuser:
 		raise Http404
-	turno = get_object_or_404(Turno, pk = id_turno)
+	assemblea = Assemblea.objects.get(id = id_assemblea)
+	turno = get_object_or_404(Turno, id = id_turno)
 	form = TurnoForm(request.POST or None, request.FILES or None, instance = turno,
 	                 initial = {'assemblea': turno.assemblea})
 	form.fields['assemblea'].widget = forms.HiddenInput()
@@ -201,6 +203,7 @@ def update_turno_view(request, id_assemblea, id_turno):
 
 	context = {
 		"title": "Modifica turno",
+		"assemblea": assemblea,
 		"turno": turno,
 		"form": form,
 	}
@@ -223,7 +226,7 @@ def update_gruppo_view(request, id_assemblea, id_turno, id_gruppo):
 			"assemblee:turno", id_assemblea = id_assemblea, id_turno = id_turno)
 
 	context = {
-		"title": "Modifica turno",
+		"title": "Modifica gruppo",
 		"gruppo": gruppo,
 		"form": form,
 	}
@@ -269,7 +272,7 @@ def apri_iscrizioni_view(request, id_assemblea):
 	if not request.user.studente.is_attivato:
 		raise Http404
 	if request.user.studente.is_rapistituto or request.user.is_superuser:
-		assemblea = Assemblea.objects.get(pk = id_assemblea)
+		assemblea = Assemblea.objects.get(id = id_assemblea)
 		assemblea.iscrizioni_aperte = True
 		assemblea.save()
 		next = request.GET.get("next")
@@ -284,7 +287,7 @@ def chiudi_iscrizioni_view(request, id_assemblea):
 	if not request.user.studente.is_attivato:
 		raise Http404
 	if request.user.studente.is_rapistituto or request.user.is_superuser:
-		assemblea = Assemblea.objects.get(pk = id_assemblea)
+		assemblea = Assemblea.objects.get(id = id_assemblea)
 		assemblea.iscrizioni_aperte = False
 		assemblea.save()
 		next = request.GET.get("next")
@@ -299,7 +302,7 @@ def mostra_assemblea_view(request, id_assemblea):
 	if not request.user.studente.is_attivato:
 		raise Http404
 	if request.user.studente.is_rapistituto or request.user.is_superuser:
-		assemblea = Assemblea.objects.get(pk = id_assemblea)
+		assemblea = Assemblea.objects.get(id = id_assemblea)
 		assemblea.mostra = True
 		assemblea.save()
 		next = request.GET.get("next")
@@ -314,7 +317,7 @@ def nascondi_assemblea_view(request, id_assemblea):
 	if not request.user.studente.is_attivato:
 		raise Http404
 	if request.user.studente.is_rapistituto or request.user.is_superuser:
-		assemblea = Assemblea.objects.get(pk = id_assemblea)
+		assemblea = Assemblea.objects.get(id = id_assemblea)
 		assemblea.mostra = False
 		assemblea.iscrizioni_aperte = False
 		assemblea.save()
@@ -333,7 +336,7 @@ def iscrizione_view(request, id_assemblea, id_turno, id_gruppo):
 	if not request.user.studente.is_attivato:
 		raise Http404
 
-	assemblea = Assemblea.objects.get(pk = id_assemblea)
+	assemblea = Assemblea.objects.get(id = id_assemblea)
 	if not assemblea.mostra and not (request.user.studente.is_rapistituto or request.user.is_superuser):
 		if not assemblea.iscrizioni_aperte:
 			raise Http404
@@ -346,7 +349,7 @@ def iscrizione_view(request, id_assemblea, id_turno, id_gruppo):
 			gruppo.iscritti -= 1
 			gruppo.save()
 
-	gruppo = Gruppo.objects.get(pk = id_gruppo)
+	gruppo = Gruppo.objects.get(id = id_gruppo)
 	if not gruppo.iscritti == gruppo.iscritti_massimi:
 		iscritto = Iscritto(studente = request.user.studente, gruppo = gruppo)
 		gruppo.iscritti += 1
@@ -365,12 +368,12 @@ def disiscrizione_view(request, id_assemblea, id_turno, id_gruppo):
 	if not request.user.studente.is_attivato:
 		raise Http404
 
-	assemblea = Assemblea.objects.get(pk = id_assemblea)
+	assemblea = Assemblea.objects.get(id = id_assemblea)
 	if not assemblea.mostra and not (request.user.studente.is_rapistituto or request.user.is_superuser):
 		if not assemblea.iscrizioni_aperte:
 			raise Http404
 
-	gruppo = Gruppo.objects.get(pk = id_gruppo)
+	gruppo = Gruppo.objects.get(id = id_gruppo)
 	iscritto = Iscritto.objects.get(studente = request.user.studente, gruppo = gruppo)
 	gruppo.iscritti -= 1
 	iscritto.delete()
@@ -387,14 +390,14 @@ def disiscrivi_view(request, id_assemblea, id_turno, id_gruppo, id_utente):
 	if not request.user.studente.is_attivato:
 		raise Http404
 
-	assemblea = Assemblea.objects.get(pk = id_assemblea)
+	assemblea = Assemblea.objects.get(id = id_assemblea)
 	if not assemblea.mostra and not (request.user.studente.is_rapistituto or request.user.is_superuser):
 		if not assemblea.iscrizioni_aperte:
 			raise Http404
 
 	if request.user.studente.is_rapistituto or request.user.is_superuser:
-		gruppo = Gruppo.objects.get(pk = id_gruppo)
-		utente = User.objects.get(pk = id_utente)
+		gruppo = Gruppo.objects.get(id = id_gruppo)
+		utente = User.objects.get(id = id_utente)
 		iscritto = Iscritto.objects.get(studente = utente.studente, gruppo = gruppo)
 		gruppo.iscritti -= 1
 		iscritto.delete()
