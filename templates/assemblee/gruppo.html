@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+{% block head_extra %}
+{% endblock head_extra %}
+
+{% block breadcrumb %}
+    <a class="section" href="{{ BASE_DIR }}/">Home</a>
+    <i class="right angle icon divider"></i>
+    <a class="section" href="{% url "assemblee:all_assemblee" %}">Assemblee</a>
+    <i class="right angle icon divider"></i>
+    <a class="section" href="{% url "assemblee:assemblea" gruppo.turno.assemblea.id %}">Assemblea
+        del {{ gruppo.turno.assemblea.data }}</a>
+    <i class="right angle icon divider"></i>
+    <a class="section" href="{% url "assemblee:turno" gruppo.turno.assemblea.id gruppo.turno.id %}">Turno
+        delle {{ gruppo.turno.inizio }}
+        - {{ gruppo.turno.fine }}</a>
+{% endblock %}
+
+{% block content %}
+    <br>
+    {% with assemblea=gruppo.turno.assemblea turno=gruppo.turno %}
+        <div class="ui stackable two column divided grid">
+            <div class="row">
+                <div class="eleven wide column no-padding">
+
+                    <div class="ui internally celled grid">
+
+                        <div class="row">
+                            <div class="column">
+                                <div class="ui small header">
+                                    <div class="ui big grey header"><span><i
+                                            class="ui user icon"></i></span>Tenuto
+                                        da {{ gruppo.host }}<br>
+                                        <span><i class="ui marker arrow icon"></i></span>{{ gruppo.aula }}
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="column">
+                                {{ gruppo.descrizione }}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="column">
+                                {% if not gruppo_iscritto %}
+                                    <a class="ui green {% if gruppo.iscritti == gruppo.iscritti_massimi %}disabled {% endif %}right floated compact button"
+                                       href="{% url "assemblee:iscrizione" assemblea.id turno.id gruppo.id %}/?next={% url "assemblee:gruppo" assemblea.id turno.id gruppo.id %}">
+                                        Iscriviti</a>
+                                {% else %}
+                                    <a class="ui red right floated compact button"
+                                       href="{% url "assemblee:disiscrizione" assemblea.id turno.id gruppo.id %}/?next={% url "assemblee:gruppo" assemblea.id turno.id gruppo.id %}">
+                                        Disiscriviti</a>
+                                {% endif %}
+
+                                {% if gruppo.iscritti == gruppo.iscritti_massimi %}
+                                    <span><div class="ui red right floated header">Gruppo pieno</div></span>
+                                {% endif %}
+                                <span>
+                                        <div
+                                                class="ui grey header">{{ gruppo.iscritti }} / {{ gruppo.iscritti_massimi }}
+                                            iscritti
+                                        </div>
+                                    </span>
+
+                                {% if iscritti|length > 0 %}
+                                    <div class="ui hidden divider"></div>
+                                    <table class="ui green compact sortable celled table">
+                                        <thead>
+                                        <tr>
+                                            {% if user.studente.is_rapistituto or user.is_superuser %}
+                                                <th class="center alligned"></th>
+                                            {% endif %}
+                                            <th>Cognome</th>
+                                            <th>Nome</th>
+                                            <th>Classe</th>
+                                            <th>Sezione</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for iscritto in iscritti %}
+                                            <tr>
+                                                {% if user.studente.is_rapistituto or user.is_superuser %}
+                                                    <td class="collapsing">
+                                                        <i data-href="{% url "assemblee:disiscrivi" assemblea.id turno.id gruppo.id iscritto.studente.user.id %}"
+                                                           class="ui red link close icon delete-button">
+                                                        </i>
+                                                    </td>
+                                                {% endif %}
+                                                <td>{{ iscritto.studente.user.last_name }}</td>
+                                                <td>{{ iscritto.studente.user.first_name }}</td>
+                                                <td>{{ iscritto.studente.classe }}</td>
+                                                <td>{{ iscritto.studente.sezione }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                {% endif %}
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- colonna di destra -->
+                {% if user.studente.is_rapistituto or user.is_superuser %}
+                    <div class="five wide column">
+                        <div class="ui stackable green cards">
+                            <div class="ui fluid card">
+                                <div class="content">
+                                    <div class="header">Strumenti <i class="ui right floated pencil icon"></i></div>
+                                </div>
+                                <div class="content">
+                                    <div class="ui two vertical buttons">
+                                        <a href="{% url 'assemblee:update_gruppo' assemblea.id turno.id gruppo.id %}"
+                                           class="ui fluid yellow button">Modifica gruppo</a>
+                                    </div>
+                                </div>
+                                <div class="content">
+                                    <div class="ui two vertical buttons">
+                                        <div data-href="{% url 'assemblee:delete_turno' assemblea.id turno.id %}"
+                                             class="ui fluid red button delete-button">Elimina turno
+                                        </div>
+                                        <a href="{% url 'assemblee:update_turno' assemblea.id turno.id %}"
+                                           class="ui fluid yellow button">Modifica turno</a>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    {% endwith %}
+{% endblock content %}

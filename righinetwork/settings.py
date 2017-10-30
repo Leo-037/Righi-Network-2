@@ -42,6 +42,7 @@ INSTALLED_APPS = [
 	"taggit",
 
 	'accounts',
+	'assemblee',
 	'blog',
 ]
 
