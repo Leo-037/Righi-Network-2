@@ -44,6 +44,7 @@ INSTALLED_APPS = [
 	'accounts',
 	'assemblee',
 	'blog',
+	'sondaggi',
 ]
 
 MIDDLEWARE = [

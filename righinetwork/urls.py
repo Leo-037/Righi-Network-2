@@ -11,6 +11,7 @@ urlpatterns = [
 	url(r'^admin/', admin.site.urls),
 	url(r'^assemblee/', include('assemblee.urls', namespace = "assemblee")),
     url(r'^gestione/', include('accounts.urls', namespace='accounts')),
+	url(r'^sondaggi/', include('sondaggi.urls', namespace = "sondaggi")),
     url(r'^hijack/', include('hijack.urls')),
     url(r'^silk/', include('silk.urls', namespace='silk')),
     url(r'^summernote/', include('django_summernote.urls')),

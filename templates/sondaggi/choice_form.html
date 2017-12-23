@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block head_extra %}
+    {{ form.media }}
+{% endblock head_extra %}
+
+{% block breadcrumb %}
+    <a class="section" href="{{ BASE_DIR }}/">Home</a>
+    <i class="right angle icon divider"></i>
+    <a class="section" href="{% url "sondaggi:index" %}">Sondaggi</a>
+    <i class="right angle icon divider"></i>
+    <a class="section" href="{% url "sondaggi:detail" poll.id %}">{{ poll.question }}</a>
+    <i class="right angle icon divider"></i>
+    {% if instance %}
+        <a class="section" href="{% url "sondaggi:detail" instance.poll.id %}">{{ instance.choice_text }}</a>
+        <i class="right angle icon divider"></i>
+        <div class="active section">Modifica</div>
+    {% else %}
+        <div class="active section">Aggiungi Scelta</div>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <form class="ui equal width form" method='POST' action='' enctype='multipart/form-data'>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type='submit' class='ui green button' value='Aggiungi Scelta'/>
+    </form>
+    <div class="ui hidden divider"></div>
+{% endblock content %}

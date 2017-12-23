@@ -85,6 +85,12 @@
             $('.ui.accordion')
                 .accordion()
             ;
+            $('.ui.progress')
+                .progress("")
+            ;
+            $('.ui.radio.checkbox')
+                .checkbox()
+            ;
         })
     </script>
 
@@ -113,6 +119,7 @@
         </div>
     {% endif %}
     <a href="{% url "assemblee:all_assemblee" %}" class="item"><b>Assemblee d'istituto</b></a>
+    <a href="{% url "sondaggi:index" %}" class="item"><b>Sondaggi</b></a>
 </div>
 
 <div class="pusher">
@@ -175,7 +182,7 @@
             </div>
             <div class="ui fitted divider"></div>
             {% if title %}
-                <div class="ui large green right floated header">
+                <div class="ui large green right floated header" style="margin-right: 0">
                     {{ title }}
                 </div>
             {% endif %}
@@ -219,6 +226,12 @@
 <!-- TODO: controllare in TUTTI i file .html i controlli se l'utente è admin o rappresentante -->
 <!-- TODO: rimuovere ogni riferimento a crispy forms -->
 <!-- TODO: mettere .no-padding dove serve -->
+<!-- TODO: controllare cosa è visibile dai non rappresentanti (es. assemblee.html) -->
+<!-- TODO: ripensare i redirect -->
+<!-- TODO: controllare e ripensare come viene visualizzata la roba (larghezza delle colonne, etc...) -->
+<!-- TODO: aggiungere messaggi dove necessario -->
+<!-- TODO: rendere tag cliccabili sotto i post -->
+<!-- TODO: aggiungere filtro per rappresentanti nelle colonne? -->
 
 </body>
 </html>

@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block head_extra %}
+
+{% endblock head_extra %}
+
+{% block breadcrumb %}
+    <a class="section" href="{{ BASE_DIR }}/">Home</a>
+    <i class="right angle icon divider"></i>
+    <a class="section" href="{% url "sondaggi:index" %}">Sondaggi</a>
+    <i class="right angle icon divider"></i>
+    <div class="active section">Risultati</div>
+{% endblock %}
+
+{% block content %}
+    <div class="ui hidden divider"></div>
+    <div class="ui stackable two column grid">
+        <div class="eleven wide column">
+            {% for choice in choices %}
+                <div class="ui clearing basic segment" style="padding: 0;">
+                    <div class="ui right floated edit header" style="margin: 0">
+                        <span><a href="{% url "sondaggi:update_choice" poll.id choice.id %}"><i
+                                class="ui large yellow pencil icon"></i></a>
+                        <i data-href="{% url "sondaggi:delete_choice" poll.id choice.id %}"
+                           class="ui large red close delete-button link icon"></i></span>
+                    </div>
+                    <div class="ui left floated header">{{ choice.choice_text }} - {{ choice.votes }}
+                        vot{{ choice.votes|pluralize:"o,i" }}
+                    </div>
+                </div>
+                <div class="ui indicating progress" data-value="{{ choice.votes }}" data-total="{{ voti_tot }}"
+                     id="choice{{ forloop.counter }}">
+                    <div class="bar">
+                        <div class="progress"></div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- colonna di destra -->
+        <div class="five wide column">
+            <div class="ui stackable green cards">
+                <!-- Edit Widget -->
+                {% if user.studente.is_rapistituto or user.is_superuser %}
+                    <div class="ui fluid card">
+                        <div class="content">
+                            <div class="header">Strumenti <i class="ui right floated pencil icon"></i></div>
+                        </div>
+                        <div class="content">
+                            <div class="ui two vertical buttons">
+                                <a href="{% url 'sondaggi:create_choice' poll.id 1 %}" class="ui fluid blue button">Aggiungi
+                                    scelta</a>
+                                {% if choices|length > 0 %}
+                                    <div class="ui fluid yellow button edit-button">Mofifica</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="content">
+                            <div class="ui two vertical buttons">
+                                <div data-href="{% url 'sondaggi:delete_poll' poll.id %}"
+                                     class="ui fluid red button delete-button">Elimina sondaggio
+                                </div>
+                                <a href="{% url 'sondaggi:update_poll' poll.id %}"
+                                   class="ui fluid yellow button">Modifica sondaggio</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
