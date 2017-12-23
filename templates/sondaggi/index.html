@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block head_extra %}
+{% endblock head_extra %}
+
+{% block breadcrumb %}
+    <a class="section" href="{{ BASE_DIR }}/">Home</a>
+{% endblock %}
+
+{% block content %}
+    <div class="ui hidden divider"></div>
+
+    <div class="ui stackable two column grid">
+        <div class="row">
+
+            <!-- colonna di sinistra -->
+            <div class="eleven wide column">
+                {% if polls %}
+                    <div class="ui big relaxed divided list">
+                        {% for poll in polls %}
+                            <div class="item">
+                                {% if user.is_superuser or user.studente.is_rapistituto %}
+                                    <div class="edit">
+                                        <i data-href="{% url "sondaggi:delete_poll" poll.id %}"
+                                           class="ui large red close right floated link delete-button icon"></i>
+                                        <a href="{% url "sondaggi:update_poll" poll.id %}"><i
+                                                class="ui large yellow pencil right floated icon"></i></a>
+                                    </div>
+                                {% endif %}
+                                <i class="ui large {% if poll in poll_votati %}checkmark box{% else %}square outline{% endif %} right floated fitted icon"></i>
+                                <div class="content">
+                                    <a class="header" href="{% if poll in poll_votati %}
+                                                                {% url "sondaggi:results" poll.id %}
+                                                            {% else %}
+                                                                {% url "sondaggi:detail" poll.id %}
+                                                            {% endif %}">
+                                        {{ poll.question }}</a>
+                                    <div class="description">Postato {{ poll.timestamp }}</div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="ui large header">Non ci sono sondaggi</div>
+                {% endif %}
+            </div>
+
+            <!-- colonna di destra -->
+            <div class="five wide column">
+                <div class="ui green cards">
+                    <!-- Edit Widget -->
+                    {% if user.studente.is_rapistituto or user.is_superuser %}
+                        <div class="ui fluid card">
+                            <div class="content">
+                                <div class="header">Strumenti <i class="ui right floated pencil icon"></i></div>
+                            </div>
+                            <div class="content">
+                                <div class="ui two vertical buttons">
+                                    <a href="{% url 'sondaggi:create_poll' %}" class="ui fluid blue button">Aggiungi</a>
+                                    {% if polls|length > 0 %}
+                                        <div class="ui fluid yellow button edit-button">Mofifica</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

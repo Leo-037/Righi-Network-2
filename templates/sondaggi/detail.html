@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block head_extra %}
+{% endblock head_extra %}
+
+{% block breadcrumb %}
+    <a class="section" href="{{ BASE_DIR }}/">Home</a>
+    <i class="right angle icon divider"></i>
+    <a class="section" href="{% url "sondaggi:index" %}">Sondaggi</a>
+{% endblock %}
+
+{% block content %}
+    <div class="ui hidden divider"></div>
+
+    <div class="ui stackable two column grid">
+        <div class="eleven wide column">
+            {% if choices|length > 0 %}
+                <form class="ui huge centered form" action="{% url 'sondaggi:vote' poll.id %}" method="post">
+                    {% csrf_token %}
+                    <div class="grouped fields">
+                        <label>Scegli una:</label>
+                        {% for choice in choices %}
+                            <div class="field">
+                                <div class="ui radio checkbox">
+                                    <input type="radio" name="choice" checked="" tabindex="0" class="hidden"
+                                           value="{{ choice.id }}"
+                                           id="choice{{ forloop.counter }}"/>
+                                    <label>
+                                        {{ choice.choice_text }}
+                                        {% if user.studente.is_rapistituto or user.is_superuser %}
+                                            <span class="edit">
+                                                <a href="{% url "sondaggi:update_choice" poll.id choice.id %}"><i
+                                                        class="ui right floated yellow pencil icon"></i></a>
+                                                <i data-href="{% url "sondaggi:delete_choice" poll.id choice.id %}"
+                                                   class="ui right floated red close delete-button link icon"></i>
+                                            </span>
+                                        {% endif %}
+                                    </label>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <input type="submit" class="ui green submit button" value="Vota"/>
+                </form>
+            {% else %}
+                <div class="ui large yellow centered header">Non ci sono scelte
+                    {% if user.studente.is_rapistituto or user.is_superuser %}<br>
+                        <a href="{% url "sondaggi:create_choice" poll.id 1 %}"><i
+                                class="ui plus icon"></i></a>{% endif %}</div>
+            {% endif %}
+        </div>
+
+        <!-- colonna di destra -->
+        <div class="five wide column">
+            <div class="ui stackable green cards">
+                <!-- Edit Widget -->
+                {% if user.studente.is_rapistituto or user.is_superuser %}
+                    <div class="ui fluid card">
+                        <div class="content">
+                            <div class="header">Strumenti <i class="ui right floated pencil icon"></i></div>
+                        </div>
+                        <div class="content">
+                            <div class="ui two vertical buttons">
+                                <a href="{% url 'sondaggi:create_choice' poll.id 1 %}" class="ui fluid blue button">Aggiungi
+                                    scelta</a>
+                                {% if choices|length > 0 %}
+                                    <div class="ui fluid yellow button edit-button">Mofifica</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="content">
+                            <div class="ui two vertical buttons">
+                                <div data-href="{% url 'sondaggi:delete_poll' poll.id %}"
+                                     class="ui fluid red button delete-button">Elimina sondaggio
+                                </div>
+                                <a href="{% url 'sondaggi:update_poll' poll.id %}"
+                                   class="ui fluid yellow button">Modifica sondaggio</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
