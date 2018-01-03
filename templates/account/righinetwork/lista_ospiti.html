@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% load crispy_forms_tags %}
 
 {% block head_title %}
     {{ title }}
@@ -17,7 +16,7 @@
         <div class="col-md-10 offset-md-1">
             <h1 class="text-center text-primary">Ospiti</h1>
             <hr>
-            {% crispy form %}
+            {{ form.as_p }}
             <br>
             <div class="col-md-12">
                 <table class="table">

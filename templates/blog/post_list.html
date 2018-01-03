@@ -100,14 +100,16 @@
                                 {% endif %}
 
                                 <div class="content">
-                                    {% if post.publish > today %}
-                                        <div class="ui teal right floated label">Post Futuro</div>
-                                    {% endif %}
-                                    {% if post.draft %}
-                                        <div class="ui red right floated label">Bozza</div>
-                                    {% endif %}
+                                    <div class="ui right floated labels">
+                                        {% if post.publish > today %}
+                                            <div class="ui teal label">Post Futuro</div>
+                                        {% endif %}
+                                        {% if post.draft %}
+                                            <div class="ui red label">Bozza</div>
+                                        {% endif %}
+                                    </div>
                                     <div class="header">
-                                        <h2 class="ui header"><a href="{{ post_url }}">{{ post.title }}</a></h2>
+                                        <div class="ui big header"><a href="{{ post_url }}">{{ post.title }}</a></div>
                                     </div>
                                     <div class="meta">
                                         <span>{{ post.publish|date:'d-m-Y' }}</span>
@@ -122,7 +124,7 @@
 
                                 <div class="content">
                                     <div class="description">
-                                        <h4>{{ post.content|truncatewords_html:80|safe }}</h4>
+                                        <div class="ui small header">{{ post.content|truncatewords_html:80|safe }}</div>
                                     </div>
                                 </div>
 
@@ -131,13 +133,18 @@
                                     <div class="extra content">
                                         <div class="ui tag labels">
                                             {% for tag in post.tags.all %}
-                                                <div class="ui label" href="/?tag={{ tag }}">{{ tag }}
-                                                    {% if user.is_superuser or user.studente.is_rapistituto %}
+                                                {% if user.is_superuser or user.studente.is_rapistituto %}
+                                                    <div class="ui label" href="/?tag={{ tag }}">{{ tag }}
+
                                                         <a class="detail"
                                                            href="{% url "blog:remove-tag" post.slug tag %}?next=/"><i
                                                                 class="ui red close icon"></i></a>
-                                                    {% endif %}
-                                                </div>
+
+                                                    </div>
+                                                {% else %}
+                                                    <a class="ui label"
+                                                       href="/?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}tag={{ tag }}">{{ tag }}</a>
+                                                {% endif %}
                                             {% endfor %}
                                         </div>
                                     </div>
@@ -167,7 +174,7 @@
                     <br>
                 {% else %}
                     {% if not user.studente.is_rapistituto and not user.is_superuser %}
-                        <hr>
+                        <div class="ui divider"></div>
                     {% endif %}
                     <div class="ui orange centered huge header"><i>Non ci sono comunicazioni</i></div>
                 {% endif %}
@@ -176,12 +183,12 @@
             <!-- colonna di destra -->
             <div class="five wide column">
 
-                <div class="ui stackable green fluid cards">
+                <div class="ui stackable green cards">
                     <!-- Edit Widget -->
                     {% if user.studente.is_rapistituto or user.is_superuser %}
-                        <div class="ui card">
+                        <div class="ui fluid card">
                             <div class="content">
-                                <div class="header">Strumenti <i class="ui right floated pencil icon"></i></div>
+                                <div class="header">Strumenti <i class="ui right floated configure icon"></i></div>
                             </div>
                             <div class="content">
                                 <div class="ui two vertical buttons">
@@ -195,21 +202,23 @@
                     {% endif %}
 
                     <!-- Tag Widget -->
-                    {% if tags|length > 0 %}
-                        <div class="ui card">
-                            <div class="content">
-                                <div class="header">Tag <i class="ui right floated tag icon"></i></div>
-                            </div>
-                            <div class="content">
+                    <div class="ui fluid card">
+                        <div class="content">
+                            <div class="header">Tag <i class="ui right floated tag icon"></i></div>
+                        </div>
+                        <div class="content">
+                            {% if tags|length > 0 %}
                                 <div class="ui tag labels">
                                     {% for tag in tags %}
                                         <a class="ui label"
                                            href="/?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}tag={{ tag }}">{{ tag }}</a>
                                     {% endfor %}
                                 </div>
-                            </div>
+                            {% else %}
+                                <div class="ui yellow header">Nessun post taggato</div>
+                            {% endif %}
                         </div>
-                    {% endif %}
+                    </div>
                 </div>
             </div>
         </div>

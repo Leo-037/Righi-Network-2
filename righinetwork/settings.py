@@ -32,7 +32,6 @@ INSTALLED_APPS = [
 	# 'allauth.socialaccount.providers.google',
 	# 'allauth.socialaccount.providers.instagram',
 
-	'crispy_forms',
 	'django_summernote',
 	'hijack',
 	'compat',
@@ -169,10 +168,6 @@ HIJACK_LOGIN_REDIRECT_URL = '/'
 HIJACK_LOGOUT_REDIRECT_URL = '/admin/auth/user/'
 HIJACK_USE_BOOTSTRAP = True
 HIJACK_ALLOW_GET_REQUESTS = True
-
-# # Impostazioni Cripsy Forms
-#
-# CRISPY_TEMPLATE_PACK = 'semantic-ui'
 
 # Impostazioni Taggit
 

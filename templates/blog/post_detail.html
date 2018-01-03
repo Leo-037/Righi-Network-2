@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% load crispy_forms_tags %}
 
 {% block head_title %}
     {{ instance.title }}
@@ -17,7 +16,7 @@
 {% block content %}
     <div class="ui stackable two column divided grid">
         <div class="row">
-            <div class="eleven wide column">
+            <div class="eleven wide column" style="padding: 0">
 
                 <div class="ui internally celled grid">
 
@@ -33,7 +32,6 @@
                         <div class="row">
                             <div class="column">
                                 <img class="fluid image" src="{{ instance.image.url }}" alt="">
-                                <div class="ui divider"></div>
                             </div>
                         </div>
                     {% endif %}
@@ -67,13 +65,13 @@
             <!-- colonna di destra -->
             <div class="five wide column">
 
-                <div class="ui stackable green fluid cards">
+                <div class="ui stackable green cards">
 
                     <!-- Edit Widget -->
                     {% if user.studente.is_rapistituto or user.is_superuser %}
-                        <div class="ui card">
+                        <div class="ui fluid card">
                             <div class="content">
-                                <div class="header">Strumenti <i class="ui right floated pencil icon"></i></div>
+                                <div class="header">Strumenti <i class="ui right floated configure icon"></i></div>
                             </div>
                             <div class="content">
                                 <div class="ui two vertical buttons">
@@ -99,7 +97,7 @@
                     {% endif %}
 
                     <!-- Search Widget -->
-                    <div class="ui card">
+                    <div class="ui fluid card">
                         <div class="content">
                             <div class="header">Cerca <i class="ui right floated question icon"></i></div>
                         </div>
@@ -117,7 +115,7 @@
 
                     <!-- Tag Widget -->
                     {% if tags|length > 0 %}
-                        <div class="ui card">
+                        <div class="ui fluid card">
                             <div class="content">
                                 <div class="header">Tag <i class="ui right floated tag icon"></i></div>
                             </div>
