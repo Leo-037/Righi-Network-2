@@ -96,7 +96,7 @@
 <body>
 
 <!-- sidebar -->
-<div class="ui main inverted vertical menu sidebar">
+<div class="ui main inverted vertical menu sidebar" id="main_sidebar">
     <div class="item">
         <a class="ui logo icon image" href="/" style="margin-right: 1rem" type="image/png">
             <img src="{% static 'righinetwork/r2.png' %}">
@@ -121,7 +121,7 @@
 <div class="pusher">
 
     <!-- menu -->
-    <div class="ui fixed inverted evenly divided borderless main menu">
+    <div class="ui fixed inverted evenly divided borderless main menu" id="main_menu">
         <a class="launch icon item" id="open-main-sidebar">
             <i class="content icon"></i>
         </a>
@@ -139,6 +139,7 @@
                             <div class="header">Impostazioni</div>
                             <a class="item" href="{% url 'account_email' %}">E-mail</a>
                             <a class="item" href="{% url 'account_reset_password' %}">Password</a>
+                            <a class="item" href="{% url 'socialaccount_connections' %}">Social</a>
                             <div class="divider"></div>
                             <a class="item" href="{% url 'account_logout' %}">Esci</a>
                         </div>
@@ -171,7 +172,7 @@
             </div>
         {% endfor %}
 
-        <div class="ui basic clearing segment" style="padding: 0;">
+        <div class="ui basic clearing segment" style="padding: 0;" id="main_breadcrumb">
             <div class="ui large breadcrumb">
                 {% block breadcrumb %}
                 {% endblock breadcrumb %}

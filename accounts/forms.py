@@ -1,6 +1,4 @@
 from allauth.account.forms import LoginForm
-from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit
 from django import forms
 from django.contrib.auth import (
     authenticate,
@@ -43,18 +41,6 @@ class UserLoginForm(LoginForm):
 
 
 class StudenteRegisterForm(forms.Form):
-    def __init__(self, *args, **kwargs):
-        super(StudenteRegisterForm, self).__init__(*args, **kwargs)
-        self.helper = FormHelper()
-        self.helper.form_class = 'form-inline'
-        self.helper.field_template = 'bootstrap4/layout/inline_field.html'
-        self.helper.form_method = 'POST'
-        self.helper.add_input(Submit('Aggiungi Studente', 'Aggiungi Studente', css_class='btn-primary'))
-        self.helper.layout = Layout(
-            'nome',
-            'cognome',
-        )
-
     nome = forms.CharField(label='Nome')
     cognome = forms.CharField(label='Cognome')
 
@@ -99,15 +85,4 @@ class DummySignupForm(forms.ModelForm):
 
 
 class GuestRegisterForm(forms.Form):
-    def __init__(self, *args, **kwargs):
-        super(GuestRegisterForm, self).__init__(*args, **kwargs)
-        self.helper = FormHelper()
-        self.helper.form_class = 'form-inline'
-        self.helper.field_template = 'bootstrap4/layout/inline_field.html'
-        self.helper.form_method = 'POST'
-        self.helper.add_input(Submit('Aggiungi ospite', 'Aggiungi ospite', css_class='btn-primary'))
-        self.helper.layout = Layout(
-            'username'
-        )
-
     username = forms.CharField(label='Username')

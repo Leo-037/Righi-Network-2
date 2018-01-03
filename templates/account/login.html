@@ -1,39 +1,60 @@
 {% extends "base.html" %}
-
-{% load i18n %}
 {% load account socialaccount %}
 
-{% block head_title %}{% trans "Sign In" %}{% endblock %}
+{% block head_extra %}
+    <style>
+        .column {
+            max-width: 450px;
+        }
+
+        #main_sidebar {
+            display: none !important;
+        }
+
+        #open-main-sidebar {
+
+            display: none !important;
+        }
+
+        #main_breadcrumb {
+
+            display: none !important;
+        }
+    </style>
+{% endblock head_extra %}
 
 {% block content %}
+    {% providers_media_js %}
+    <div class="ui middle aligned grid">
+        <div class="row">
+            <div class="centered column">
+                <form class="ui equal width large form" method="POST" action="{% url 'account_login' %}"
+                      enctype='multipart/form-data'>
+                    <div class="ui raised fluid card">
+                        <div class="content">
+                            <div class="ui green header">Accedi</div>
+                            <div class="description">
+                                {% csrf_token %}
+                                {{ form.as_p }}
+                                {% if redirect_field_value %}
+                                    <input type="hidden" name="{{ redirect_field_name }}"
+                                           value="{{ redirect_field_value }}"/>
+                                {% endif %}
+                                <a href="{% url 'account_reset_password' %}">Password dimenticata?</a><br>
 
-    {% get_providers as socialaccount_providers %}
-    <br><br>
-    <div class="row justify-content-md-center align-self-center">
-        <div class="col col-lg-6">
-            <div class="card">
-                <h1 class="card-header text-primary">{% trans "Sign In" %}</h1>
-                <div class="card-block">
-                    <form class="login" method="POST" action="{% url 'account_login' %}">
-                        {% csrf_token %}
-                        {{ form }}
-                        {% if redirect_field_value %}
-                            <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
-                        {% endif %}
-                        <a class="button secondaryAction"
-                           href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a><br>
-                        Non hai un account? <a href="{% url 'account_signup' %}">Registrati</a>
-                        <hr>
-                        <button class="btn btn-primary btn-block btn-lg primaryAction" type="submit">Accedi</button>
-                    </form>
-                </div>
-                <div class="card-footer">
-                    <div class="btn-group" role="group">
-                        <button class="btn btn-block btn-social btn-facebook">
-                            <i class="fa fa-facebook"></i>Accedi con facebook
-                        </button>
-
+                            </div>
+                        </div>
+                        <div class="extra content">
+                            <button class="ui green button" type="submit">Accedi</button>
+                        </div>
+                        <a class="ui bottom attached facebook button"
+                           href="{% provider_login_url "facebook" method="js_sdk" %}">
+                            <i class="facebook icon"></i>Accedi con Facebook
+                        </a>
                     </div>
+                </form>
+
+                <div class="ui message">Non hai un account? <a href="{% url 'account_signup' %}">Registrati</a>
                 </div>
             </div>
         </div>

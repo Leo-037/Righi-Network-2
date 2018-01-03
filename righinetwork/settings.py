@@ -11,7 +11,7 @@ SECRET_KEY = private_settings.SECRET_KEY
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 # Application definition
 
@@ -29,8 +29,6 @@ INSTALLED_APPS = [
 	'allauth.socialaccount',
 
 	'allauth.socialaccount.providers.facebook',
-	# 'allauth.socialaccount.providers.google',
-	# 'allauth.socialaccount.providers.instagram',
 
 	'django_summernote',
 	'hijack',
@@ -80,8 +78,8 @@ TEMPLATES = [
 ]
 
 AUTHENTICATION_BACKENDS = (
-	'django.contrib.auth.backends.ModelBackend',
 	'allauth.account.auth_backends.AuthenticationBackend',
+	'django.contrib.auth.backends.ModelBackend',
 )
 
 WSGI_APPLICATION = 'righinetwork.wsgi.application'
@@ -141,7 +139,7 @@ SOCIALACCOUNT_PROVIDERS = {
 		'EXCHANGE_TOKEN': True,
 		'LOCALE_FUNC': lambda request: 'it',
 		'VERIFIED_EMAIL': False,
-		'VERSION': 'v2.9',
+		'VERSION': 'v2.5',
 	}
 }
 ACCOUNT_EMAIL_REQUIRED = True
@@ -150,6 +148,7 @@ ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 ACCOUNT_LOGOUT_ON_GET = True
 ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = "/"
+ACCOUNT_SESSION_REMEMBER = False
 
 ACCOUNT_FORMS = {'login': 'accounts.forms.UserLoginForm'}
 
