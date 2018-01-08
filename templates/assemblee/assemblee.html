@@ -13,7 +13,8 @@
         <div class="row">
             <div class="{% if user.is_superuser or user.studente.is_rapistituto %}eleven{% else %}sixteen{% endif %} wide column">
 
-                <div class="ui raised stackable green cards">
+                <div class="ui raised stackable
+                        {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} cards">
                     {% for assemblea in assemblee %}
 
                         {% if assemblea.mostra or user.is_superuser or user.studente.is_rapistituto %}
@@ -41,17 +42,24 @@
                                         {% if assemblea.data < today %}
                                             <div class="ui teal label">Passata</div>
                                         {% endif %}
-                                        {% if assemblea.mostra %}
-                                            <div class="ui green label">Visibile</div>
-                                        {% else %}
-                                            <div class="ui red label">Nascosta</div>
+                                        {% if user.is_superuser or user.studente.is_rapistituto %}
+                                            {% if assemblea.mostra %}
+                                                <div class="ui green label">
+                                                    Visibile
+                                                </div>
+                                            {% else %}
+                                                <div class="ui red label">Nascosta</div>
+                                            {% endif %}
                                         {% endif %}
                                         {% if assemblea.iscrizioni_aperte %}
-                                            <div class="ui green label">Iscrizioni aperte</div>
+                                            <div class="ui green label">
+                                                Iscrizioni aperte
+                                            </div>
                                         {% else %}
                                             <div class="ui red label">Iscrizioni chiuse</div>
                                         {% endif %}
                                     </div>
+
                                     <a href="{% url "assemblee:assemblea" assemblea.id %}">
                                         <div class="ui huge blue header">
                                             {{ assemblea.data }}
@@ -68,7 +76,10 @@
                                         <div class="ui two bottom attached buttons">
                                             {% if not assemblea.iscrizioni_aperte %}
                                                 <a href="{% url "assemblee:apri_iscrizioni" assemblea.id %}"
-                                                   class="ui green {% if not assemblea.mostra %}disabled {% endif %}button">Apri
+                                                   class="ui
+
+
+                                                           {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} {% if not assemblea.mostra %}disabled {% endif %}button">Apri
                                                     iscrizioni</a>
                                             {% else %}
                                                 <a href="{% url "assemblee:chiudi_iscrizioni" assemblea.id %}"
@@ -76,7 +87,11 @@
                                             {% endif %}
                                             {% if not assemblea.mostra %}
                                                 <a href="{% url "assemblee:mostra_assemblea" assemblea.id %}"
-                                                   class="ui green button">Mostra assemblea</a>
+                                                   class="ui
+
+
+                                                           {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} button">Mostra
+                                                    assemblea</a>
                                             {% else %}
                                                 <a href="{% url "assemblee:nascondi_assemblea" assemblea.id %}"
                                                    class="ui orange button">Nascondi assemblea</a>
@@ -94,7 +109,8 @@
             </div>
             {% if user.studente.is_rapistituto or user.is_superuser %}
                 <div class="five wide column">
-                    <div class="ui stackable green cards">
+                    <div class="ui stackable
+                            {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} cards">
                         <div class="ui fluid card">
                             <div class="content">
                                 <div class="header">Strumenti <i class="ui right floated pencil icon"></i></div>

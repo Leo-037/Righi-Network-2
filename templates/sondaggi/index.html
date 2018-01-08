@@ -47,7 +47,7 @@
 
             <!-- colonna di destra -->
             <div class="five wide column">
-                <div class="ui green cards">
+                <div class="ui {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} cards">
                     <!-- Edit Widget -->
                     {% if user.studente.is_rapistituto or user.is_superuser %}
                         <div class="ui fluid card">

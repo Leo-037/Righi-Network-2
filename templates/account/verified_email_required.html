@@ -1,25 +1,47 @@
 {% extends "base.html" %}
 {% load i18n %}
 
-{% block head_title %}{% trans "Verify Your E-mail Address" %}{% endblock %}
+{% block head_title %}Verifica e-mail{% endblock %}
+
+{% block head_extra %}
+    <style>
+        {% if not user.is_authenticated %}
+
+            #main_sidebar {
+                display: none !important;
+            }
+
+            #open-main-sidebar {
+
+                display: none !important;
+            }
+        {% endif %}
+
+        #main_breadcrumb {
+
+            display: none !important;
+        }
+    </style>
+{% endblock head_extra %}
 
 {% block content %}
-    <br><br>
-    <div class="row justify-content-md-center align-self-center">
-        <div class="col col-lg-6">
-            <h1 class="text-primary">{% trans "Verify Your E-mail Address" %}</h1>
-
-            {% url 'account_email' as email_url %}
-
-            <p>E' richiesto che tu verifichi che questo è il tuo indirizzo email.</p>
-
-            <p>Una e-mail è stata mandata per la verifica. Segui il link in essa per completare la registrazione.
-                Contatta l'amministratore o i rappresentanti d'istituto se non la ricevi entro 10 minuti (limite di
-                tempo volutamente alto)</p>
-
-            <p><strong>Nota:</strong> puoi ancora
-                <a href="{{ email_url }}">cambiare il tuo indirizzo e-mail</a>.</p>
-
-        </div>
+    <div class="ui large {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} header">
+        Verifica indirizzo e-mail
     </div>
+    <div class="ui divider"></div>
+
+    {% url 'account_email' as email_url %}
+
+    <div class="ui header">E' richiesto che tu verifichi che questo è il tuo indirizzo email.</div>
+
+    <div class="ui header">Una e-mail è stata mandata per la verifica. Segui il link in essa per completare la
+        registrazione.
+        Contatta l'amministratore o i rappresentanti d'istituto se non la ricevi entro 10 minuti (limite di
+        tempo volutamente alto)
+    </div>
+
+    <div class="ui header"><strong>Nota:</strong> puoi ancora
+        <a href="{{ email_url }}">cambiare il tuo indirizzo e-mail</a>.
+    </div>
+
 {% endblock %}

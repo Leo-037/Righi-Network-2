@@ -15,7 +15,8 @@
         <div class="row">
             <div class="{% if user.is_superuser or user.studente.is_rapistituto %}eleven{% else %}sixteen{% endif %} wide column">
 
-                <div class="ui raised stackable green cards">
+                <div class="ui raised stackable
+                        {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} cards">
                     {% for turno in turni %}
 
                         <div class="ui fluid card">
@@ -50,7 +51,8 @@
             </div>
             {% if user.studente.is_rapistituto or user.is_superuser %}
                 <div class="five wide column">
-                    <div class="ui stackable green cards">
+                    <div class="ui stackable
+                            {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} cards">
                         <div class="ui fluid card">
                             <div class="content">
                                 <div class="header">Strumenti <i class="ui right floated pencil icon"></i></div>

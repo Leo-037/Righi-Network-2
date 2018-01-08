@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% block head_title %}Login Annullato {% endblock %}
+
 {% block head_extra %}
     <style>
         {% if not user.is_authenticated %}
@@ -23,10 +25,11 @@
 
 {% block content %}
     <div class="ui large {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} header">
-        Account non attivo
+        Login annullato
     </div>
     <div class="ui divider"></div>
-    <div class="ui header">Questo account non è attivo. Contatta l'amministratore o i rappresentanti d'istituto se pensi
-        che sia un errore.
+    {% url 'account_login' as login_url %}
+    <div class="ui header">Hai scelto di annullare il login al sito usando uno dei tuoi account esistenti. Se è stato un
+        errore: <a href="{{ login_url }}">Accedi</a>.
     </div>
 {% endblock %}

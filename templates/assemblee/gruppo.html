@@ -69,7 +69,8 @@
 
                                 {% if iscritti|length > 0 %}
                                     <div class="ui hidden divider"></div>
-                                    <table class="ui green compact sortable celled table">
+                                    <table class="ui
+                                            {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} compact sortable celled table">
                                         <thead>
                                         <tr>
                                             {% if user.studente.is_rapistituto or user.is_superuser %}
@@ -109,7 +110,8 @@
                 <!-- colonna di destra -->
                 {% if user.studente.is_rapistituto or user.is_superuser %}
                     <div class="five wide column">
-                        <div class="ui stackable green cards">
+                        <div class="ui stackable
+                                {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} cards">
                             <div class="ui fluid card">
                                 <div class="content">
                                     <div class="header">Strumenti <i class="ui right floated pencil icon"></i></div>

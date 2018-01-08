@@ -141,6 +141,38 @@
                             <a class="item" href="{% url 'account_reset_password' %}">Password</a>
                             <a class="item" href="{% url 'socialaccount_connections' %}">Social</a>
                             <div class="divider"></div>
+                            <div class="item">
+                                <span class="text" style="color: {{ user.studente.colore }}">Colore sito</span>
+                                <div class="left menu">
+                                    <a class="item" href="{% url "change_color" "red" %}"><i
+                                            class="ui red square icon"></i>Rosso</a>
+                                    <a class="item" href="{% url "change_color" "orange" %}"><i
+                                            class="ui orange square icon"></i>Arancione</a>
+                                    <a class="item" href="{% url "change_color" "yellow" %}"><i
+                                            class="ui yellow square icon"></i>Giallo</a>
+                                    <a class="item" href="{% url "change_color" "olive" %}"><i
+                                            class="ui olive square icon"></i>Verde chiaro</a>
+                                    <a class="item" href="{% url "change_color" "green" %}"><i
+                                            class="ui green square icon"></i>Verde</a>
+                                    <a class="item" href="{% url "change_color" "teal" %}"><i
+                                            class="ui teal square icon"></i>Azzurro</a>
+                                    <a class="item" href="{% url "change_color" "blue" %}"><i
+                                            class="ui blue square icon"></i>Blu</a>
+                                    <a class="item" href="{% url "change_color" "violet" %}"><i
+                                            class="ui violet square icon"></i>Viola</a>
+                                    <a class="item" href="{% url "change_color" "purple" %}"><i
+                                            class="ui purple square icon"></i>Porpora</a>
+                                    <a class="item" href="{% url "change_color" "pink" %}"><i
+                                            class="ui pink square icon"></i>Rosa</a>
+                                    <a class="item" href="{% url "change_color" "brown" %}"><i
+                                            class="ui brown square icon"></i>Marrone</a>
+                                    <a class="item" href="{% url "change_color" "grey" %}"><i
+                                            class="ui grey square icon"></i>Grigio</a>
+                                    <a class="item" href="{% url "change_color" "black" %}"><i
+                                            class="ui black square icon"></i>Nero</a>
+                                </div>
+                            </div>
+                            <div class="divider"></div>
                             <a class="item" href="{% url 'account_logout' %}">Esci</a>
                         </div>
                     </div>
@@ -148,9 +180,7 @@
             </div>
         {% endif %}
     </div>
-
     <br><br><br>
-
     <div class="ui container">
 
         <!-- notifica hijack -->
@@ -165,7 +195,8 @@
 
         <!-- messaggi -->
         {% for message in messages %}
-            <div class="ui green floating message">
+            <div class="ui
+                    {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} floating message">
                 <i class="close icon"></i>
                 <div class="header">Messaggio</div>
                 <span>{{ message }}</span>
@@ -179,7 +210,12 @@
             </div>
             <div class="ui fitted divider"></div>
             {% if title %}
-                <div class="ui large green right floated header" style="margin-right: 0">
+                <div class="ui large
+
+
+
+                        {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} right floated header"
+                     style="margin-right: 0">
                     {{ title }}
                 </div>
             {% endif %}
@@ -207,7 +243,9 @@
                     <i class="remove icon"></i>
                     Annulla
                 </div>
-                <div class="ui green ok inverted button">
+                <div class="ui
+
+                        {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} ok inverted button">
                     <i class="checkmark icon"></i>
                     Elimina
                 </div>

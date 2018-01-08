@@ -31,11 +31,27 @@ class IntegerRangeField(models.IntegerField):
 # Models
 
 
+COLORI = (('red', 'Rosso'),
+          ('orange', 'Arancione'),
+          ('yellow', 'Giallo'),
+          ('olive', 'Verde Chiaro'),
+          ('green', 'Verde'),
+          ('teal', 'Azzurro'),
+          ('blue', 'Blu'),
+          ('violet', 'Viola'),
+          ('purple', 'Porpora'),
+          ('pink', 'Rosa'),
+          ('brown', 'Marrone'),
+          ('grey', 'Grigio'),
+          ('black', 'Nero'))
+
 class Studente(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
 
     classe = IntegerRangeField(min_value=1, max_value=5)
     sezione = UpperCharField(max_length=1, uppercase=True)
+
+    colore = models.CharField(max_length = 6, choices = COLORI, default = 'green')
 
     is_rapclasse = models.BooleanField(default=False)
     is_rapistituto = models.BooleanField(default=False)

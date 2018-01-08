@@ -23,7 +23,9 @@
     <form class="ui equal width form" method='POST' action='' enctype='multipart/form-data'>
         {% csrf_token %}
         {{ form.as_p }}
-        <input type='submit' class='ui green button' value='{{ title }}'/>
+        <input type='submit'
+               class='ui {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} button'
+               value='{{ title }}'/>
     </form>
     <div class="ui hidden divider"></div>
 {% endblock content %}

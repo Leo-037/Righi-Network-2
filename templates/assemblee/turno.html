@@ -39,7 +39,10 @@
 
                                 <div class="content">
                                     {% if gruppo == gruppo_iscritto %}
-                                        <div class="ui green right floated label">Iscritto</div>
+                                        <div class="ui
+                                                {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} right floated label">
+                                            Iscritto
+                                        </div>
                                     {% endif %}
                                     <div class="header">
                                         <div class="ui big header"><a
@@ -89,7 +92,8 @@
                 </div>
                 {% if user.studente.is_rapistituto or user.is_superuser %}
                     <div class="five wide column">
-                        <div class="ui stackable green cards">
+                        <div class="ui stackable
+                                {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} cards">
                             <div class="ui fluid card">
                                 <div class="content">
                                     <div class="header">Strumenti <i class="ui right floated pencil icon"></i></div>

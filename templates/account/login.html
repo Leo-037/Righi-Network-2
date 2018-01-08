@@ -3,17 +3,20 @@
 
 {% block head_extra %}
     <style>
+        {% if not user.is_authenticated %}
+
+            #main_sidebar {
+                display: none !important;
+            }
+
+            #open-main-sidebar {
+
+                display: none !important;
+            }
+        {% endif %}
+
         .column {
             max-width: 450px;
-        }
-
-        #main_sidebar {
-            display: none !important;
-        }
-
-        #open-main-sidebar {
-
-            display: none !important;
         }
 
         #main_breadcrumb {
@@ -32,7 +35,10 @@
                       enctype='multipart/form-data'>
                     <div class="ui raised fluid card">
                         <div class="content">
-                            <div class="ui green header">Accedi</div>
+                            <div class="ui large
+                                    {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} header">
+                                Accedi
+                            </div>
                             <div class="description">
                                 {% csrf_token %}
                                 {{ form.as_p }}
@@ -45,7 +51,10 @@
                             </div>
                         </div>
                         <div class="extra content">
-                            <button class="ui green button" type="submit">Accedi</button>
+                            <button class="ui
+                                    {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} button"
+                                    type="submit">Accedi
+                            </button>
                         </div>
                         <a class="ui bottom attached facebook button"
                            href="{% provider_login_url "facebook" method="js_sdk" %}">
@@ -53,9 +62,7 @@
                         </a>
                     </div>
                 </form>
-
-                <div class="ui message">Non hai un account? <a href="{% url 'account_signup' %}">Registrati</a>
-                </div>
+                <div class="ui message">Non hai un account? <a href="{% url 'account_signup' %}">Registrati</a></div>
             </div>
         </div>
     </div>

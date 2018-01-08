@@ -150,7 +150,9 @@
                                     </div>
                                 {% endif %}
 
-                                <a class="ui green bottom attached button" href="{{ post_url }}">
+                                <a class="ui
+                                        {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} bottom attached button"
+                                   href="{{ post_url }}">
                                     Leggi <i class="long arrow right icon"></i>
                                 </a>
                             </div>
@@ -183,7 +185,8 @@
             <!-- colonna di destra -->
             <div class="five wide column">
 
-                <div class="ui stackable green cards">
+                <div class="ui stackable
+                        {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} cards">
                     <!-- Edit Widget -->
                     {% if user.studente.is_rapistituto or user.is_superuser %}
                         <div class="ui fluid card">

@@ -1,5 +1,8 @@
-{% load i18n %}
 {% load account %}
 
 {% user_display user as user_display %}
-<h6><strong>{% trans "Note" %}:</strong> hai già effettutato l'accesso come {{ user_display }}.</h6>
+<div class="ui {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} message"
+     style="margin: 0;">
+    <i class="close icon"></i>
+    Nota: hai già effettutato l'accesso come {{ user_display }}.
+</div>

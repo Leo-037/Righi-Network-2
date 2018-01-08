@@ -1,37 +1,51 @@
 {% extends "base.html" %}
-{% load i18n %}
 {% load account %}
 
-{% block head_title %}{% trans "Confirm E-mail Address" %}{% endblock %}
+{% block head_title %}Conferma indirizzo email{% endblock %}
 
+{% block head_extra %}
+    <style>
+        {% if not user.is_authenticated %}
+
+            #main_sidebar {
+                display: none !important;
+            }
+
+            #open-main-sidebar {
+
+                display: none !important;
+            }
+        {% endif %}
+
+        #main_breadcrumb {
+
+            display: none !important;
+        }
+    </style>
+{% endblock head_extra %}
 
 {% block content %}
-    <br><br>
-    <div class="row justify-content-md-center align-self-center">
-        <div class="col col-lg-6">
-            <h1 class="text-primary">{% trans "Confirm E-mail Address" %}</h1>
-            <hr>
-            {% if confirmation %}
-
-                {% user_display confirmation.email_address.user as user_display %}
-
-                <h5>{% with confirmation.email_address.email as email %}Confermi che
-                    <a href="mailto:{{ email }}">{{ email }}</a> è un indirizzo email associato all'utente
-                    {{ user_display }}?{% endwith %}</h5>
-                <br>
-                <form method="post" action="{% url 'account_confirm_email' confirmation.key %}">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-primary">Confermo</button>
-                </form>
-
-            {% else %}
-
-                {% url 'account_email' as email_url %}
-
-                <h5>Questo link di conferma e-mail è invalido.
-                    <a href="{{ email_url }}">Invia una nuova richiesta di conferma</a>.</h5>
-
-            {% endif %}
-        </div>
+    <div class="ui large {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} header">
+        Conferma indirizzo email
     </div>
+    <div class="ui divider"></div>
+    {% if confirmation %}
+        {% user_display confirmation.email_address.user as user_display %}
+        <div class="ui header">{% with confirmation.email_address.email as email %}Confermi che
+            <a href="mailto:{{ email }}">{{ email }}</a> è un indirizzo email associato all'utente
+            {{ user_display }}?{% endwith %}</div>
+        <form method="post" action="{% url 'account_confirm_email' confirmation.key %}" class="ui form">
+            {% csrf_token %}
+            <button type="submit"
+                    class="ui {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} button">
+                Confermo
+            </button>
+        </form>
+
+    {% else %}
+        {% url 'account_email' as email_url %}
+        <div class="ui header">Questo link di conferma e-mail è invalido.
+            <a href="{{ email_url }}">Invia una nuova richiesta di conferma</a>.
+        </div>
+    {% endif %}
 {% endblock %}
