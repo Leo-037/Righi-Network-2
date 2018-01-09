@@ -24,10 +24,10 @@
 {% endblock head_extra %}
 
 {% block content %}
-    <div class="ui large {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} header">
+    <div class="ui large
+            {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} dividing header">
         Verifica indirizzo e-mail
     </div>
-    <div class="ui divider"></div>
     <div class="ui header">Una e-mail è stata mandata per la verifica. Segui il link in essa per completare la
         registrazione.
         Contatta l'amministratore o i rappresentanti d'istituto se non la ricevi entro 5 minuti

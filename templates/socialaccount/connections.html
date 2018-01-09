@@ -12,10 +12,10 @@
 {% endblock head_extra %}
 
 {% block content %}
-    <div class="ui large {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} header">
+    <div class="ui large
+            {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} dividing header">
         Connessioni account
     </div>
-    <div class="ui divider"></div>
 
     {% if form.accounts %}
         <div class="ui header">Puoi accedere al tuo account usando qualunque dei seguenti account di terze parti:</div>
@@ -62,10 +62,10 @@
         <div class="ui yellow large header">Al momento non hai nessun account social collegato a queesto utente</div>
     {% endif %}
 
-    <div class="ui large {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} header">
+    <div class="ui large
+            {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} dividing header">
         Aggiungi account di terze parti
     </div>
-    <div class="ui divider"></div>
 
     <div class="ui bulleted list">
         {% include "socialaccount/snippets/provider_list.html" with process="connect" %}

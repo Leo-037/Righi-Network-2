@@ -25,10 +25,10 @@
 {% endblock head_extra %}
 
 {% block content %}
-    <div class="ui large {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} header">
+    <div class="ui large
+            {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} dividing header">
         Conferma indirizzo email
     </div>
-    <div class="ui divider"></div>
     {% if confirmation %}
         {% user_display confirmation.email_address.user as user_display %}
         <div class="ui header">{% with confirmation.email_address.email as email %}Confermi che

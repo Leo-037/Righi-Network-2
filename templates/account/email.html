@@ -13,12 +13,14 @@
     <div class="ui stackable two column divided grid">
         <div class="eight wide column">
             <div class="ui large
-                    {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} header">Indirizzi
+                    {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} dividing header">
+                Indirizzi
                 e-mail
             </div>
-            <div class="ui divider"></div>
             {% if user.emailaddress_set.all %}
-                <div class="ui header">I seguenti indirizzi e-mail sono associati al tuo account:</div>
+                <div class="ui header" style="margin-top: 14px; margin-bottom: 14px">I seguenti indirizzi e-mail sono
+                    associati al tuo account:
+                </div>
                 <div class="ui
                         {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} segment">
                     <form action="{% url 'account_email' %}" class="ui form" method="post">
@@ -83,10 +85,10 @@
         </div>
         <div class="eight wide column">
             <div class="ui large
-                    {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} header">Aggiungi
+                    {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} dividing header">
+                Aggiungi
                 indirizzo e-mail
             </div>
-            <div class="ui divider"></div>
             <form method="post" action="{% url 'account_email' %}" class="ui form">
                 {% csrf_token %}
                 <div class="field">{{ form }}</div>

@@ -24,11 +24,10 @@
 {% endblock head_extra %}
 
 {% block content %}
-    <div class="ui large {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} header">
+    <div class="ui large
+            {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} dividing header">
         Registrati
     </div>
-    <div class="ui divider"></div>
-
     <div class="ui header">{% with provider_name=account.get_provider.name site_name=site.name %}Stai per usare il tuo
         account
         {{ provider_name }} per accedere al sito {{ site_name }}. Come ultimo step, completa il seguente

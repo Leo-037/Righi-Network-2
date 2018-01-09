@@ -24,10 +24,10 @@
 {% endblock head_extra %}
 
 {% block content %}
-    <div class="ui large {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} header">
+    <div class="ui large
+            {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} dividing header">
         Esci
     </div>
-    <div class="ui divider"></div>
     <div class="ui header">Sei sicuro di voler uscire?</div>
     <form method="post" action="{% url 'account_logout' %}" class="ui form">
         {% csrf_token %}
