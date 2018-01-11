@@ -4,82 +4,110 @@
     {{ title }}
 {% endblock head_title %}
 
+{% block breadcrumb %}
+    <a class="section" href="{{ BASE_DIR }}/">Home</a>
+    <i class="right angle icon divider"></i>
+    <a class="section" href="{% url "accounts:gestione" %}">Gestione classi</a>
+{% endblock breadcrumb %}
 
 {% block content %}
-    <nav class="breadcrumb">
-        <span class="breadcrumb-item"><a href="{{ BASE_DIR }}/">Home</a></span>
-        <span class="breadcrumb-item"><a href="{% url "accounts:gestione" %}">Gestione Classi</a></span>
-        <span class="breadcrumb-item active">{{ classe }}^ {{ sezione }}</span>
-    </nav>
+    <form class="ui form" method="post">
+        {% csrf_token %}
+        <div class="fields">
+            {% for field in form %}
+                <div class="inline field">
+                    {{ field.errors }}
+                    {{ field.label_tag }} {{ field }}
 
-    <div class="row">
-        <div class="col-md-10 offset-md-1">
-            <h1 class="text-center text-primary">{{ classe }}^ {{ sezione }}</h1>
-            <hr>
-            {{ form.as_p }}
-            <div class="col-md-12">
-                {% if studenti_inattivi|length > 0 %}
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Cognome</th>
-                            <th>Nome</th>
-                            <th>Username</th>
-                            <th>Password</th>
-                            <th>Modifica</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for dummy in studenti_inattivi %}
-                            <tr>
-                                <td>{{ forloop.counter }}</td>
-                                <td>{{ dummy.last_name }}</td>
-                                <td>{{ dummy.first_name }}</td>
-                                <td>{{ dummy.username }}</td>
-                                <td>{{ dummy.otpassword }}</td>
-                                <td><a class="btn btn-danger confirm-delete" role="button"
-                                       href="{% url 'accounts:delete-dummy' dummy.username %}">Elimina</a>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                {% endif %}
-                {% if studenti_inattivi|length > 0 and studenti_attivi|length > 0 %}
-                    <hr/>
-                {% endif %}
-                {% if studenti_attivi|length > 0 %}
-                    <br>
-                    <table class="table table-striped">
-                        <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Cognome</th>
-                            <th>Nome</th>
-                            <th>Username</th>
-                            <th>Email</th>
-                            <th>Modifica</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for studente in studenti_attivi %}
-                            <tr>
-                                <td>{{ forloop.counter }}</td>
-                                <td>{{ studente.user.last_name }}</td>
-                                <td>{{ studente.user.first_name }}</td>
-                                <td>{{ studente.user.username }}</td>
-                                <td>{{ studente.user.email }}</td>
-                                <td><a class="btn btn-danger confirm-delete" role="button"
-                                       href="{% url 'accounts:delete-user' studente.user.username %}">Elimina</a>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                {% endif %}
-            </div>
+                </div>
+            {% endfor %}
+            <button class="ui {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} button"
+                    type="submit">Aggiungi studente
+            </button>
         </div>
-    </div>
-
+    </form>
+    {% if studenti_inattivi|length > 0 %}
+        <div class="ui large
+                    {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} dividing header">
+            Non attivati
+        </div>
+        <table class="ui sortable celled striped
+                {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} table">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Cognome</th>
+                <th>Nome</th>
+                <th>Username</th>
+                <th>Password</th>
+                <th><i class="ui wrench icon"></i></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for dummy in studenti_inattivi %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ dummy.last_name }}</td>
+                    <td>{{ dummy.first_name }}</td>
+                    <td>{{ dummy.username }}</td>
+                    <td>{{ dummy.otpassword }}</td>
+                    <td>
+                        <div class="ui two buttons">
+                            <button class="delete-button ui compact red icon button"
+                                    data-href="{% url 'accounts:delete-dummy' dummy.username %}">
+                                <i class="ui delete icon"></i>
+                            </button>
+                            <a class="delete-button ui disabled compact yellow icon button"
+                               href="{% url 'accounts:edit-user' dummy.username %}">
+                                <i class="ui pencil icon"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+    {% if studenti_attivi|length > 0 %}
+        <div class="ui large
+                    {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} dividing header">
+            Attivati
+        </div>
+        <table class="ui sortable celled striped
+                {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} table">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Cognome</th>
+                <th>Nome</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Modifica</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for studente in studenti_attivi %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ studente.user.last_name }}</td>
+                    <td>{{ studente.user.first_name }}</td>
+                    <td>{{ studente.user.username }}</td>
+                    <td>{{ studente.user.email }}</td>
+                    <td>
+                        <div class="ui two buttons">
+                            <button class="delete-button ui compact red icon button"
+                                    data-href="{% url 'accounts:delete-user' studente.user.username %}">
+                                <i class="ui delete icon"></i>
+                            </button>
+                            <a class="delete-button ui compact disabled yellow icon button"
+                               href="{% url 'accounts:edit-user' studente.user.username %}">
+                                <i class="ui pencil icon"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
 {% endblock content %}

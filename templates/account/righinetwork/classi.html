@@ -4,51 +4,48 @@
     {{ title }}
 {% endblock head_title %}
 
+{% block breadcrumb %}
+    <div class="active section">Home</div>
+{% endblock breadcrumb %}
 
 {% block content %}
-    <nav class="breadcrumb">
-        <span class="breadcrumb-item"><a href="{{ BASE_DIR }}/">Home</a></span>
-        <span class="breadcrumb-item active">Gestione Classi</span>
-    </nav>
-
-    <div class="row">
-        <div class="col-md-10 offset-md-1">
-            <h1 class="text-primary text-center">Gestione Classi</h1>
-            <hr>
-            <div class="col-md-8">
-                <form onsubmit="window.location = '/gestione/' + classe.value + '-' + sezione.value.toUpperCase(); return false;">
-                    <div class="input-group">
-                        <input class="form-control" id="search" placeholder='Classe' type="number" name="classe"
-                               value="" required>
-                        <input class="form-control" id="search" placeholder='Sezione' name="sezione"
-                               value="" required>
-                        <span class="input-group-btn">
-				                <button class="btn btn-primary"><i class="fa fa-plus"></i></button>
-                            </span>
-                    </div>
-                </form>
+    <form onsubmit="window.location = '/gestione/' + classe.value + '-' + sezione.value.toUpperCase(); return false;"
+          class="ui form">
+        <div class="fields">
+            <div class="inline field">
+                <label>Classe</label>
+                <input class="" id="search" placeholder='es. 3' type="number" name="classe"
+                       value="" required>
             </div>
-            <hr>
-            <div class="container">
-                <h3 class="text-left text-primary">{{ studenti_attivati }} / {{ studenti_totali }} studenti
-                    attivati</h3><br/>
-                <div class="card-columns">
-                    <div class="card">
-                        <div class="card-block">
-                            <a href="{% url 'accounts:guests' %}">
-                                <h4>Ospiti</h4></a>
-                        </div>
-                    </div>
-                    {% for classe in classi %}
-                        <div class="card">
-                            <div class="card-block">
-                                <a href="{% url 'accounts:classe' classe.0 classe.1 %}">
-                                    <h4>{{ classe.0 }}^ {{ classe.1 }}</h4></a>
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
+            <div class="inline field">
+                <label>Sezione</label>
+                <input class="field" id="search" placeholder='es. T' name="sezione"
+                       value="" required>
+            </div>
+            <button class="ui
+                        {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} icon button">
+                <i class="ui plus icon"></i></button>
+        </div>
+    </form>
+    <div class="ui dividing header">{{ studenti_attivati }} / {{ studenti_totali }} studenti
+        attivati
+    </div>
+    <div class="ui six green stackable doubling cards">
+        <div class="ui raised link card">
+            <div class="center aligned content">
+                <a href="{% url 'accounts:guests' %}">
+                    <div class="ui green header">Ospiti</div>
+                </a>
             </div>
         </div>
+        {% for classe in classi %}
+            <div class="ui raised link card">
+                <div class="center aligned content">
+                    <a href="{% url 'accounts:classe' classe.0 classe.1 %}">
+                        <div class="ui green header">{{ classe.0 }}^ {{ classe.1 }}</div>
+                    </a>
+                </div>
+            </div>
+        {% endfor %}
     </div>
 {% endblock content %}

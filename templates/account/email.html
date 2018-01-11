@@ -14,8 +14,7 @@
         <div class="eight wide column">
             <div class="ui large
                     {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} dividing header">
-                Indirizzi
-                e-mail
+                Indirizzi e-mail
             </div>
             {% if user.emailaddress_set.all %}
                 <div class="ui header" style="margin-top: 14px; margin-bottom: 14px">I seguenti indirizzi e-mail sono
@@ -43,6 +42,7 @@
                                         <h5>
                                             {% if emailaddress.verified %}
                                                 <div class="ui
+
                                                         {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} label">
                                                     Verificato
                                                 </div>
@@ -60,6 +60,7 @@
                         <br>
                         <div class="ui compact buttons">
                             <button class="ui
+
                                     {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} button"
                                     type="submit"
                                     name="action_primary">Rendi principale

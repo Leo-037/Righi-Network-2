@@ -1,11 +1,12 @@
 import random
 
+from django.contrib import messages
 from django.contrib.auth import (
 	authenticate,
 	get_user_model,
 )
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect, Http404
+from django.shortcuts import render, redirect, Http404, get_object_or_404
 
 from .forms import GuestRegisterForm, StudenteRegisterForm, DummySignupForm
 from .models import Studente, DummyUser, Guest
@@ -73,7 +74,8 @@ def signup_view(request):
 		nome = dummy.first_name
 		cognome = dummy.last_name
 
-		new_user = User(username = username, first_name = nome, last_name = cognome, email = email)
+		new_user = User(username = username, first_name = nome.capitalize(), last_name = cognome.capitalize(),
+		                email = email)
 		new_user.set_password(new_password)
 		new_user.save()
 
@@ -119,7 +121,7 @@ def classi_view(request):
 		ospiti = len(Guest.objects.all())
 
 		return render(request, "account/righinetwork/classi.html",
-		              {'classi': classi_complete, 'studenti_attivati': studenti_attivati,
+		              {'title': "Gestione classi", 'classi': classi_complete, 'studenti_attivati': studenti_attivati,
 		               'studenti_totali': studenti_totali, 'ospiti': ospiti})
 	else:
 		raise Http404
@@ -139,7 +141,8 @@ def dettagli_classe_view(request, classe, sezione):
 			form = StudenteRegisterForm()
 
 			return render(request, 'account/righinetwork/dettagli_classe.html',
-			              {'form': form, 'classe': classe, 'sezione': sezione, 'studenti_attivi': studenti_attivi,
+			              {'title': str(classe) + "^ " + str(sezione), 'form': form, 'classe': classe,
+			               'sezione': sezione, 'studenti_attivi': studenti_attivi,
 			               'studenti_inattivi': studenti_inattivi})
 
 		elif request.method == "POST":
@@ -150,6 +153,8 @@ def dettagli_classe_view(request, classe, sezione):
 
 				nome = form.cleaned_data['nome']
 				cognome = form.cleaned_data['cognome']
+				nome.capitalize()
+				cognome.capitalize()
 				username = clean_username(nome, cognome)
 				password = generate_password(8)
 
@@ -166,6 +171,26 @@ def dettagli_classe_view(request, classe, sezione):
 
 	else:
 		raise Http404
+
+
+@login_required
+def edit_studente_view(request, username):
+	if not request.user.studente.is_rapistituto and not request.user.is_superuser:
+		raise Http404
+	user = get_object_or_404(User, username = username)
+	studente = Studente.objects.get(user = user)
+	form = StudenteRegisterForm(request.POST or None, initial = {'nome': user.first_name, 'cognome': user.last_name})
+	if form.is_valid():
+		user = form.save()
+		messages.success(request, "Studente modificato", extra_tags = 'html_safe')
+		return redirect("accounts:classe", studente.classe, studente.sezione)
+
+	context = {
+		"title": "Modifica studente",
+		"utente": user,
+		"form": form,
+	}
+	return render(request, "account/righinetwork/studente_form.html", context)
 
 
 def clean_username(nome, cognome):

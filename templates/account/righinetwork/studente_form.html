@@ -7,13 +7,9 @@
 {% block breadcrumb %}
     <a class="section" href="{{ BASE_DIR }}/">Home</a>
     <i class="right angle icon divider"></i>
-    {% if instance %}
-        <a class="section" href="{% url "blog:detail" instance.slug %}">{{ instance.title }}</a>
-        <i class="right angle icon divider"></i>
-        <div class="active section">Modifica</div>
-    {% else %}
-        <div class="active section">Aggiungi Post</div>
-    {% endif %}
+    <a class="section" href="{% url "accounts:gestione" %}">Gestione classi</a>
+    <i class="right angle icon divider"></i>
+    <a class="section" href="{% url "accounts:classe" utente.studente.classe utente.studente.sezione %}"></a>
 {% endblock %}
 
 {% block content %}
@@ -22,7 +18,6 @@
         {{ form.as_p }}
         <input type='submit'
                class='ui {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} button'
-               value='Aggiungi Post'/>
+               value='{{ title }}'/>
     </form>
-    <div class="ui hidden divider"></div>
 {% endblock content %}
