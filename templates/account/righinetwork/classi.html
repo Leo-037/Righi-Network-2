@@ -27,9 +27,36 @@
                 <i class="ui plus icon"></i></button>
         </div>
     </form>
-    <div class="ui dividing header">{{ studenti_attivati }} / {{ studenti_totali }} studenti
-        attivati
+    <div class="ui three tiny
+            {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} statistics"
+         style="margin-bottom: 0;">
+        <div class="statistic" style="margin-bottom: 0;">
+            <div class="value">
+                {{ studenti_totali }}
+            </div>
+            <div class="label">
+                Studenti totali
+            </div>
+        </div>
+        <div class="statistic" style="margin-bottom: 0;">
+            <div class="value">
+                {{ studenti_attivati }}
+            </div>
+            <div class="label">
+                Studenti attivati
+            </div>
+        </div>
+        <div class="statistic" style="margin-bottom: 0;">
+            <div class="value">
+                {{ ospiti }}
+            </div>
+            <div class="label">
+                Ospiti
+            </div>
+        </div>
     </div>
+    <div class="ui fitted divider"></div><br>
+
     <div class="ui six green stackable doubling cards">
         <div class="ui raised link card">
             <div class="center aligned content">

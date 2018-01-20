@@ -98,8 +98,6 @@ def post_list(request):
     tag = request.GET.get("tag")
 
     if query:
-        print("query: " + str(query))
-
         if ' ' in query:
             queryset_list = queryset_list.filter(
                 Q(title__icontains=query) |

@@ -23,8 +23,8 @@ class Choice(models.Model):
 
 
 class Vote(models.Model):
-	choice = models.ForeignKey(Choice)
-	studente = models.ForeignKey(Studente)
+	choice = models.ForeignKey(Choice, models.CASCADE)
+	studente = models.ForeignKey(Studente, models.CASCADE)
 
 
 class PollForm(ModelForm):
