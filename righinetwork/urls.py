@@ -1,22 +1,23 @@
 from django.conf import settings
-from django.conf.urls import include, url
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.urls import include, path
 
 from accounts.views import signup_view, change_color_view
 
 urlpatterns = [
-    url(r'^accounts/signup/$', signup_view),
-    url(r'^accounts/', include('allauth.urls')),
-	url(r'^admin/', admin.site.urls),
-	url(r'^colore/(?P<colore>[\w-]+)', change_color_view, name = "change_color"),
-	url(r'^assemblee/', include('assemblee.urls', namespace = "assemblee")),
-    url(r'^gestione/', include('accounts.urls', namespace='accounts')),
-	url(r'^sondaggi/', include('sondaggi.urls', namespace = "sondaggi")),
-    url(r'^hijack/', include('hijack.urls')),
-    url(r'^silk/', include('silk.urls', namespace='silk')),
-    url(r'^summernote/', include('django_summernote.urls')),
-    url(r'^', include('blog.urls', namespace='blog')),
+	path('accounts/signup/', signup_view),
+	path('accounts/', include('allauth.urls')),
+	path('admin/', admin.site.urls),
+	path('colore/<str:colore>', change_color_view, name = "change_color"),
+	path('assemblee/', include('assemblee.urls', namespace = "assemblee")),
+	path('gestione/', include('accounts.urls', namespace = 'accounts')),
+	path('sondaggi/', include('sondaggi.urls', namespace = "sondaggi")),
+	path('merchandising/', include('merchandising.urls', namespace = "merchandising")),
+	path('hijack/', include('hijack.urls')),
+	path('silk/', include('silk.urls', namespace = 'silk')),
+	path('summernote/', include('django_summernote.urls')),
+	path('', include('blog.urls', namespace = 'blog')),
 ]
 
 if settings.DEBUG:

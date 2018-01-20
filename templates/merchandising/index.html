@@ -1,0 +1,256 @@
+{% extends "base.html" %}
+
+{% block head_extra %}
+    <script>
+        $(document).ready(function () {
+            function search(input) {
+                window.location = '{% url "merchandising:index" %}?q=' + input + '{% if request.GET.tag %}&tag={{ request.GET.tag }}{% endif %}'
+            }
+
+            $('#search-button').on('click', function () {
+                search($('#search').val());
+            });
+            $('.search-name').on("click", function () {
+                search($(this).data("name"))
+            });
+        });
+    </script>
+{% endblock head_extra %}
+
+{% block breadcrumb %}
+    <a class="section" href="{{ BASE_DIR }}/">Home</a>
+{% endblock %}
+
+<!-- TODO: sostituire cards con griglia (es. Amazon)?-->
+
+{% block content %}
+    <div class="ui hidden divider"></div>
+    <div class="ui stackable two column grid">
+
+        <!-- contenuto pagina -->
+        <div class="row">
+
+            <!-- colonna di sinistra -->
+            <div class="twelve wide column">
+
+                <!-- lista post -->
+                {% if object_list|length > 0 %}
+                    <div class="ui three stackable doubling cards">
+                        {% for object in object_list %}
+                            <script>
+                                $(document).ready(function () {
+                                    $('#prodotto-{{ object.id }}')
+                                        .modal('attach events', '#prodotto-{{ object.id }}-btn', 'show')
+                                        .modal('attach events', '#prodotto-{{ object.id }}-img', 'show')
+                                    ;
+                                });
+                            </script>
+
+                            <div class="ui
+                    {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} card"
+                                 id="{{ object.id }}-{{ object.nome }}">
+
+                                <!-- header per admin -->
+                                {% if user.is_superuser or user.studente.is_rapistituto %}
+                                    <div class="edit">
+                                        <div class="ui two top attached buttons">
+                                            <a href="{% url "merchandising:update" object.id %}"
+                                               class="ui yellow button">Modifica</a>
+                                            <div data-href="{% url "merchandising:delete" object.id %}"
+                                                 class="ui red button delete-button">Elimina
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                                {% if object.foto %}
+                                    <a id="prodotto-{{ object.id }}-img" class="image">
+                                        <img src='{{ object.foto.url }}'>
+                                    </a>
+                                {% endif %}
+
+                                <div class="content">
+                                    <div class="header">
+                                        <a id="prodotto-{{ object.id }}-btn">{{ object.nome }}</a>
+                                    </div>
+                                    <div class="meta">{{ object.costo }} &euro;</div>
+                                    {% if object.descrizione %}
+                                        <div class="description">
+                                            {{ object.descrizione }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                <!-- tag -->
+                                {% if object.tags.all|length > 0 %}
+                                    <div class="extra content">
+                                        <div class="ui tag labels">
+                                            {% for tag in object.tags.all %}
+                                                {% if user.is_superuser or user.studente.is_rapistituto %}
+                                                    <div class="ui label" href="/?tag={{ tag }}">{{ tag }}
+                                                        <a class="delete-button detail"
+                                                           data-href="{% url "merchandising:remove-tag" object.id tag %}"><i
+                                                                class="ui red close icon"></i></a>
+                                                    </div>
+                                                {% else %}
+                                                    <a class="ui label"
+                                                       href="{% url "merchandising:aggiungi_prodotto" %}?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}tag={{ tag }}">{{ tag }}</a>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="ui modal" id="prodotto-{{ object.id }}">
+                                <div class="clearing content">
+                                    <div class="ui large left floated header">
+                                        {{ object.nome }}
+                                    </div>
+                                    <div class="ui large grey right floated header">{{ object.costo }} &euro;</div>
+                                </div>
+                                <div class="ui divider"></div>
+
+                                {% if object.foto %}
+                                    <div class="image content">
+                                        <div class="ui big image">
+                                            <img src='{{ object.foto.url }}'>
+                                        </div>
+                                        <div class="description">
+                                            <div class="ui header">{{ object.descrizione }}.</div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                                {% if user.is_superuser or user.studente.is_rapistituto %}
+                                    <div class="ui fitted divider"></div>
+                                    <div class="content">
+                                        <a href="{% url "merchandising:update" object.id %}"
+                                           class="ui yellow left floated button">Modifica</a>
+                                        <div data-href="{% url "merchandising:delete" object.id %}"
+                                             class="ui red left floated button delete-button">Elimina
+                                        </div>
+                                        <form onsubmit="window.location = './{{ object.id }}/add_tag/' + tag.value; return false;"
+                                              class="ui right floated right aligned form">
+                                            <div class="ui right labeled left icon input">
+                                                <i class="tags icon"></i>
+                                                <input id="tag" placeholder="Aggiungi Tag"
+                                                       name="tag">
+                                                <button class="ui tag label icon button"><i class="ui add icon"></i>
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                {% endif %}
+
+                                <div class="actions">
+                                    <div class="ui deny
+                                            {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} button">
+                                        Ok
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Pagination -->
+                    {% if is_paginated %}
+                        <div class="ui horizontal divider">
+                            <div class="ui pagination menu">
+                                {% for i in paginator.page_range %}
+                                    {% if object_list.number == i %}
+                                        <a class="active item">{{ i }}</a>
+                                    {% else %}
+                                        <a class="item" href="?page={{ i }}">{{ i }}</a>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endif %}
+                    <br>
+                {% else %}
+                    {% if not user.studente.is_rapistituto and not user.is_superuser %}
+                        <div class="ui divider"></div>
+                    {% endif %}
+                    <div class="ui orange centered huge header"><i>Non ci sono prodotti
+                        {% if request.GET.q or request.GET.tag %}che corrispondono alla ricerca{% endif %}</i></div>
+                {% endif %}
+            </div>
+            <!-- colonna di destra -->
+            <div class="four wide column">
+
+                <div class="ui stackable
+                        {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} cards">
+
+                    <!-- Edit Widget -->
+                    {% if user.studente.is_rapistituto or user.is_superuser %}
+                        <div class="ui fluid card">
+                            <div class="content">
+                                <div class="header">Strumenti <i class="ui right floated configure icon"></i></div>
+                            </div>
+                            <div class="content">
+                                <div class="ui two vertical buttons">
+                                    <a href="{% url "merchandising:aggiungi_prodotto" %}" class="ui fluid blue button">Aggiungi</a>
+                                    {% if object_list|length > 0 %}
+                                        <div class="ui fluid yellow button edit-button">Mofifica</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    <!-- Search widget -->
+                    <div class="ui fluid card">
+                        <div class="content">
+                            <div class="ui action fluid input">
+                                <input id="search" placeholder="Cerca">
+                                <button class="ui icon button" id="search-button">
+                                    <i class="search icon"></i>
+                                </button>
+                                {% if request.GET.q or request.GET.tag %}
+                                    <button onclick="location.href='{% url "merchandising:index" %}';"
+                                            class="ui negative icon button">
+                                        <i class="close icon"></i>
+                                    </button>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% if request.GET.q or request.GET.tag %}
+                            <div class="extra content">
+                                <div class="ui large labels">
+                                    {% if request.GET.q %}
+                                        <div class="ui label"><i class="search icon"></i>{{ request.GET.q|title }}
+                                        </div>
+                                    {% endif %}
+                                    {% if request.GET.tag %}
+                                        <div class="ui tag label">{{ request.GET.tag|title }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Tag Widget -->
+                    <div class="ui fluid card">
+                        <div class="content">
+                            <div class="header">Tag <i class="ui right floated tag icon"></i></div>
+                        </div>
+                        <div class="content">
+                            {% if tags|length > 0 %}
+                                <div class="ui tag labels">
+                                    {% for tag in tags %}
+                                        <a class="ui label"
+                                           href="{% url "merchandising:index" %}?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}tag={{ tag }}">{{ tag }}</a>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <div class="ui yellow header">Nessun prodotto taggato</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

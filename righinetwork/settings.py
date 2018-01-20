@@ -27,7 +27,6 @@ INSTALLED_APPS = [
 	'allauth',
 	'allauth.account',
 	'allauth.socialaccount',
-
 	'allauth.socialaccount.providers.facebook',
 
 	'django_summernote',
@@ -41,6 +40,7 @@ INSTALLED_APPS = [
 	'accounts',
 	'assemblee',
 	'blog',
+	'merchandising',
 	'sondaggi',
 ]
 

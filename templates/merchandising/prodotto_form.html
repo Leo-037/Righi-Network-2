@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block breadcrumb %}
+    <a class="section" href="{{ BASE_DIR }}/">Home</a>
+    <i class="right angle icon divider"></i>
+    <a class="section" href="{% url "merchandising:index" %}">Merchandising</a>
+{% endblock %}
+
+{% block content %}
+    <form class="ui form" method='POST' action='' enctype='multipart/form-data'>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type='submit'
+               class='ui {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} button'
+               value='Aggiungi Prodotto'/>
+    </form>
+
+{% endblock content %}
