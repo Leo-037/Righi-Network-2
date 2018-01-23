@@ -44,9 +44,6 @@
                                 </div>
                                 <div class="right aligned column">
                                     <div class="ui
-
-
-
                                             {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} header">{{ account }}</div>
                                 </div>
                             </div>
@@ -59,7 +56,7 @@
             </form>
         </div>
     {% else %}
-        <div class="ui yellow large header">Al momento non hai nessun account social collegato a queesto utente</div>
+        <div class="ui yellow large header">Al momento non hai nessun account social collegato a questo utente</div>
     {% endif %}
 
     <div class="ui large
@@ -67,10 +64,8 @@
         Aggiungi account di terze parti
     </div>
 
-    <div class="ui bulleted list">
+    <div class="ui huge bulleted list">
         {% include "socialaccount/snippets/provider_list.html" with process="connect" %}
     </div>
-
     {% include "socialaccount/snippets/login_extra.html" %}
-
 {% endblock %}

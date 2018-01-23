@@ -15,7 +15,7 @@
 {% block content %}
     <div class="ui hidden divider"></div>
     <div class="ui stackable two column grid">
-        <div class="eleven wide column">
+        <div class="{% if user.is_superuser or user.studente.is_rapistituto %}eleven{% else %}sixteen{% endif %} wide column">
             {% for choice in choices %}
                 <div class="ui clearing basic segment" style="padding: 0;">
                     <div class="ui right floated edit header" style="margin: 0">
@@ -38,11 +38,12 @@
         </div>
 
         <!-- colonna di destra -->
-        <div class="five wide column">
-            <div class="ui stackable
+        {% if user.is_superuser or user.studente.is_rapistituto %}
+            <div class="five wide column">
+                <div class="ui stackable
                     {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} cards">
-                <!-- Edit Widget -->
-                {% if user.studente.is_rapistituto or user.is_superuser %}
+                    <!-- Edit Widget -->
+
                     <div class="ui fluid card">
                         <div class="content">
                             <div class="header">Strumenti <i class="ui right floated pencil icon"></i></div>
@@ -66,8 +67,8 @@
                             </div>
                         </div>
                     </div>
-                {% endif %}
+                </div>
             </div>
-        </div>
+        {% endif %}
     </div>
 {% endblock %}

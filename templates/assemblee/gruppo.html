@@ -21,7 +21,8 @@
     {% with assemblea=gruppo.turno.assemblea turno=gruppo.turno %}
         <div class="ui stackable two column divided grid">
             <div class="row">
-                <div class="eleven wide column no-padding">
+                <div class="{% if user.is_superuser or user.studente.is_rapistituto %}eleven{% else %}sixteen{% endif %} wide column"
+                     style="padding: 0;">
 
                     <div class="ui internally celled grid">
 
@@ -38,7 +39,6 @@
                             </div>
                         </div>
 
-
                         <div class="row">
                             <div class="column">
                                 {{ gruppo.descrizione }}
@@ -49,11 +49,11 @@
                             <div class="column">
                                 {% if not gruppo_iscritto %}
                                     <a class="ui green {% if gruppo.iscritti == gruppo.iscritti_massimi %}disabled {% endif %}right floated compact button"
-                                       href="{% url "assemblee:iscrizione" assemblea.id turno.id gruppo.id %}/?next={% url "assemblee:gruppo" assemblea.id turno.id gruppo.id %}">
+                                       href="{% url "assemblee:iscrizione" assemblea.id turno.id gruppo.id %}?next={% url "assemblee:gruppo" assemblea.id turno.id gruppo.id %}">
                                         Iscriviti</a>
                                 {% else %}
                                     <a class="ui red right floated compact button"
-                                       href="{% url "assemblee:disiscrizione" assemblea.id turno.id gruppo.id %}/?next={% url "assemblee:gruppo" assemblea.id turno.id gruppo.id %}">
+                                       href="{% url "assemblee:disiscrizione" assemblea.id turno.id gruppo.id %}?next={% url "assemblee:gruppo" assemblea.id turno.id gruppo.id %}">
                                         Disiscriviti</a>
                                 {% endif %}
 
