@@ -61,34 +61,39 @@ def aggiungi_ospite_view(request):
 
 
 def signup_view(request):
-	form = DummySignupForm(request.POST or None)
+	print("Chiamata")
+	if request.method == "POST":
+		print("Post")
+		form = DummySignupForm(request.POST)
 
-	if form.is_valid():
-		username = form.cleaned_data["username"]
-		password = form.cleaned_data["otpassword"]
-		new_password = form.cleaned_data["new_password"]
-		email = form.cleaned_data["email"]
+		if form.is_valid():
+			username = form.cleaned_data["username"]
+			password = form.cleaned_data["otpassword"]
+			new_password = form.cleaned_data["new_password"]
+			email = form.cleaned_data["email"]
 
-		dummy = DummyUser.objects.get(username = username)
+			dummy = DummyUser.objects.get(username = username, otpassword = password)
 
-		nome = dummy.first_name
-		cognome = dummy.last_name
+			nome = dummy.first_name
+			cognome = dummy.last_name
 
-		new_user = User(username = username, first_name = nome.capitalize(), last_name = cognome.capitalize(),
-		                email = email)
-		new_user.set_password(new_password)
-		new_user.save()
+			new_user = User(username = username, first_name = nome.capitalize(), last_name = cognome.capitalize(),
+			                email = email)
+			new_user.set_password(new_password)
+			new_user.save()
 
-		user = authenticate(username = username, password = new_password)
+			user = authenticate(username = username, password = new_password)
 
-		studente = dummy.studente
-		studente.user = user
-		studente.is_attivato = True
-		studente.save()
+			studente = dummy.studente
+			studente.user = user
+			studente.is_attivato = True
+			studente.save()
 
-		dummy.delete()
+			dummy.delete()
 
-		return redirect("/")
+			return redirect("/")
+	else:
+		form = DummySignupForm()
 
 	return render(request, 'account/signup.html',
 	              {'form': form, 'redirect_field_name': "/", "login_url": "accounts/login"})

@@ -29,7 +29,7 @@
     <div class="ui middle aligned grid">
         <div class="row">
             <div class="centered column">
-                <form class="ui equal width large form" method="POST" action="{% url 'account_login' %}"
+                <form class="ui equal width large form" method="POST" action="{% url 'signup' %}"
                       enctype='multipart/form-data'>
                     <div class="ui raised fluid
                             {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} card">
@@ -49,8 +49,9 @@
                         </div>
                         <div class="extra content">
                             <button class="ui
+
                                     {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} button"
-                                    type="submit">Accedi
+                                    type="submit">Registrati
                             </button>
                         </div>
                     </div>
