@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block head_title %}
+    {{ title }}
+{% endblock head_title %}
+
+{% block content %}
+
+    {% if tutors_utente|length > 0 %}
+        <div class="ui relaxed divided list">
+            {% for tutor in tutors_utente %}
+                <div class="item">
+                    {% if tutor.approvato %}
+                        <i class="large green checkmark middle aligned icon"></i>
+                    {% else %}
+                        <i class="large yellow clock middle aligned icon"></i>
+                    {% endif %}
+                    <div class="content">
+                        <a class="header">{{ tutor.materia }}</a>
+                        <div class="description">{% if tutor.approvato %}Approvato{% else %}In attesa di
+                            approvazione{% endif %}</div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="ui divider"></div>
+    {% endif %}
+    {% if tutors|length > 0 %}
+        <table class="ui
+
+                {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} sortable celled striped {% if user.studente.is_rapistituto or user.is_superuser %}five{% else %}four{% endif %} column table">
+            <thead>
+            <tr>
+                {% if user.studente.is_rapistituto or user.is_superuser %}
+                    <th class="center aligned"><i class="ui wrench icon"></i></th>
+                {% endif %}
+                <th>Nome</th>
+                <th>Cognome</th>
+                <th>Materia</th>
+                <th>Ripetizioni</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for tutor in tutors %}
+                <tr>
+                    {% if user.studente.is_rapistituto or user.is_superuser %}
+                        <td>
+                            <div data-href="{% url "tutoring:delete" tutor.id %}"
+                                 class="ui red compact fluid button delete-button">Rimuovi
+                            </div>
+                        </td>
+                    {% endif %}
+                    <td>{{ tutor.studente.user.first_name }}</td>
+                    <td>{{ tutor.studente.user.last_name }}</td>
+                    <td>{{ tutor.materia }}</td>
+                    <td><a class="ui
+                            {% if user.studente.colore %}{{ user.studente.colore }}
+                            {% else %}green{% endif %} compact fluid button"
+                           role="button"
+                           href="{% url "tutoring:chiedi_tutor" tutor.id %}">Chiedi</a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="ui orange centered huge header">
+            <i>Non ci sono tutor. <a href="{% url "tutoring:diventa-tutor" %}">Diventalo</a></i>
+        </div>
+    {% endif %}
+{% endblock content %}

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% if tutors|length > 0 %}
+        <table class="ui
+
+                {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} sortable celled table">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Nome</th>
+                <th>Cognome</th>
+                <th>Materia</th>
+                <th>Mail</th>
+                <th>Cellulare</th>
+                <th>Classi</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for tutor in tutors %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ tutor.studente.user.first_name }}</td>
+                    <td>{{ tutor.studente.user.last_name }}</td>
+                    <td>{{ tutor.materia }}</td>
+                    <td>{{ tutor.studente.user.email }}</td>
+                    <td>{{ tutor.cellulare }}</td>
+                    <td>{% if tutor.prima %}1^ {% endif %}{% if tutor.seconda %}2^ {% endif %}
+                        {% if tutor.terza %}3^ {% endif %}{% if tutor.quarta %}4^ {% endif %}
+                        {% if tutor.quinta %}5^ {% endif %}</td>
+                    <td>
+                        <div class="ui two compact buttons">
+                            <a class="ui green button" role="button"
+                               href="{% url "tutoring:approva-tutor" tutor.id %}">Approva</a>
+                            <div class="ui red button delete-button" role="button"
+                                 data-href="{% url "tutoring:delete" tutor.id %}">Respingi
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endblock %}

@@ -245,6 +245,16 @@
     <a href="{% url "assemblee:all_assemblee" %}" class="item"><b>Assemblee d'istituto</b></a>
     <a href="{% url "sondaggi:index" %}" class="item"><b>Sondaggi</b></a>
     <a href="{% url "merchandising:index" %}" class="item"><b>Merchandising</b></a>
+    <div class="item">
+        <div class="header">Ripetizioni fra pari</div>
+        <div class="menu">
+            {% if user.studente.is_rapistituto or user.is_superuser %}
+                <a href="{% url "tutoring:gestione" %}" class="item">Gestione</a>
+            {% endif %}
+            <a href="{% url "tutoring:index" %}" class="item">Chiedi ripetizioni</a>
+            <a href="{% url "tutoring:diventa-tutor" %}" class="item">Diventa tutor</a>
+        </div>
+    </div>
 </div>
 
 <div class="pusher">
@@ -341,7 +351,6 @@
             {% if title %}
                 <div class="ui large
 
-
                         {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} right floated header"
                      style="margin-right: 0">
                     {{ title }}
@@ -370,8 +379,6 @@
                     Annulla
                 </div>
                 <div class="ui
-
-
 
                         {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} ok inverted button">
                     <i class="checkmark icon"></i>

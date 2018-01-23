@@ -42,6 +42,7 @@ INSTALLED_APPS = [
 	'blog',
 	'merchandising',
 	'sondaggi',
+	'tutoring',
 ]
 
 MIDDLEWARE = [
@@ -149,6 +150,7 @@ ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 ACCOUNT_LOGOUT_ON_GET = True
 ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = "/"
 ACCOUNT_SESSION_REMEMBER = False
+ACCOUNT_PRESERVE_USERNAME_CASING = False
 
 ACCOUNT_FORMS = {'login': 'accounts.forms.UserLoginForm'}
 
