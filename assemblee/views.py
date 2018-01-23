@@ -341,7 +341,7 @@ def iscrizione_view(request, id_assemblea, id_turno, id_gruppo):
 		if not assemblea.iscrizioni_aperte:
 			raise Http404
 
-	turno = Turno.objects.filter(id = id_turno)
+	turno = Turno.objects.get(id = id_turno)
 
 	for gruppo in Gruppo.objects.filter(turno = turno):
 		if Iscritto.objects.filter(studente = request.user.studente, gruppo = gruppo):
