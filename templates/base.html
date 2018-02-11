@@ -4,6 +4,7 @@
 {% load account %}
 
 <!DOCTYPE html>
+<!--suppress HtmlUnknownTarget -->
 <html lang="en">
 
 <head>
@@ -14,7 +15,9 @@
           integrity="sha256-/Z28yXtfBv/6/alw+yZuODgTbKZm86IKbPE/5kjO/xY=" crossorigin="anonymous"/>
     <link rel="stylesheet" type="text/css" href="{% static 'hijack/hijack-styles.css' %}"/>
     <link href='https://fonts.googleapis.com/css?family=Roboto|Lato|Open+Sans' rel='stylesheet'>
-    <script src="{% static 'js/jquery-3.2.1.js' %}"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"></script>
     {#    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>#}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.js"></script>
     <script>
@@ -83,6 +86,7 @@
                     else
                         this.direction = direction;
 
+                    // noinspection EqualityComparisonWithCoercionJS
                     direction = this.direction == 'asc' ? 1 : -1;
 
                     self.$table.trigger('tablesort:start', [self]);
@@ -214,7 +218,7 @@
                 .checkbox()
             ;
 
-            $('table').tablesort()
+            $('table').tablesort();
         })
     </script>
 
@@ -246,7 +250,7 @@
     <a href="{% url "sondaggi:index" %}" class="item"><b>Sondaggi</b></a>
     <a href="{% url "merchandising:index" %}" class="item"><b>Merchandising</b></a>
     <div class="item">
-        <div class="header">Ripetizioni fra pari</div>
+        <div class="header">Tutoring</div>
         <div class="menu">
             {% if user.studente.is_rapistituto or user.is_superuser %}
                 <a href="{% url "tutoring:gestione" %}" class="item">Gestione</a>
@@ -266,7 +270,7 @@
         </a>
 
         <a class="active item" href="{{ BASE_DIR }}/">
-            Righi-Network
+            Righi-network
         </a>
 
         {% if user.is_authenticated %}
@@ -350,9 +354,8 @@
             <div class="ui fitted divider"></div>
             {% if title %}
                 <div class="ui large
-
-                        {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} right floated header"
-                     style="margin-right: 0">
+                    {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %}
+                        right floated header" style="margin-right: 0">
                     {{ title }}
                 </div>
             {% endif %}
@@ -365,27 +368,29 @@
         {% endblock extra_body %}
 
         <!-- modal eliminazione -->
-        <div class="ui basic animated modal" id="delete-modal">
-            <div class="ui icon header">
-                <i class="delete icon"></i>
-                Eliminare questo elemento?
-            </div>
-            <div class="content">
-                <h3>L'operazione non può essere annullata</h3>
-            </div>
-            <div class="actions">
-                <div class="ui red basic cancel inverted button">
-                    <i class="remove icon"></i>
-                    Annulla
+        <form method="post">
+            <div class="ui basic animated modal" id="delete-modal">
+                <div class="ui icon header">
+                    <i class="delete icon"></i>
+                    Eliminare questo elemento?
                 </div>
-                <div class="ui
-
-                        {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} ok inverted button">
-                    <i class="checkmark icon"></i>
-                    Elimina
+                <div class="content">
+                    <h3>L'operazione non può essere annullata</h3>
+                </div>
+                <div class="actions">
+                    <div class="ui red basic cancel inverted button">
+                        <i class="remove icon"></i>
+                        Annulla
+                    </div>
+                    <div class="ui
+                        {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %}
+                            ok inverted button">
+                        <i class="checkmark icon"></i>
+                        Elimina
+                    </div>
                 </div>
             </div>
-        </div>
+        </form>
     </div>
 </div>
 

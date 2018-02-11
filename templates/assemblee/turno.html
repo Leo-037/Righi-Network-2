@@ -4,6 +4,7 @@
 {% endblock head_extra %}
 
 {% block breadcrumb %}
+    <!--suppress ALL -->
     <a class="section" href="{{ BASE_DIR }}/">Home</a>
     <i class="right angle icon divider"></i>
     <a class="section" href="{% url "assemblee:all_assemblee" %}">Assemblee</a>
@@ -22,7 +23,7 @@
                     <div class="ui raised stackable cards">
                         {% for gruppo in gruppi %}
 
-                            <div class="ui fluid card">
+                            <div class="ui fluid card" id="gruppo.id">
 
                                 {% if user.is_superuser or user.studente.is_rapistituto %}
                                     <div class="edit">

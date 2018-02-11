@@ -26,6 +26,7 @@ class UserLoginForm(LoginForm):
 		}
 
 	def clean(self, *args, **kwargs):
+		super(UserLoginForm, self).clean()
 		username = self.cleaned_data.get("username")
 		password = self.cleaned_data.get("password")
 
@@ -47,7 +48,7 @@ class StudenteRegisterForm(forms.Form):
 
 class DummySignupForm(forms.ModelForm):
 	username = forms.CharField()
-	otpassword = forms.CharField(label = "Password di primo login")
+	otpassword = forms.CharField(label = "Password di primo login (fornita dai rappresentanti)")
 	new_password = forms.CharField(widget = forms.PasswordInput, label = "Nuova password")
 	new_password2 = forms.CharField(widget = forms.PasswordInput, label = 'Conferma nuova password')
 	email = forms.EmailField(label = 'Indirizzo Email')

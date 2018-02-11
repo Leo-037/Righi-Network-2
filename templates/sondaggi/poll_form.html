@@ -8,14 +8,7 @@
     <a class="section" href="{{ BASE_DIR }}/">Home</a>
     <i class="right angle icon divider"></i>
     <a class="section" href="{% url "sondaggi:index" %}">Sondaggi</a>
-    <i class="right angle icon divider"></i>
-    {% if poll %}
-        <a class="section" href="{% url "sondaggi:detail" instance.id %}">{{ instance.question }}</a>
-        <i class="right angle icon divider"></i>
-        <div class="active section">Modifica</div>
-    {% else %}
-        <div class="active section">Aggiungi Sondaggio</div>
-    {% endif %}
+
 {% endblock %}
 
 {% block content %}
@@ -24,7 +17,7 @@
         {{ form.as_p }}
         <input type='submit'
                class='ui {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} button'
-               value='Aggiungi Sondaggio'/>
+               value='{{ title }}'/>
     </form>
     <div class="ui hidden divider"></div>
 {% endblock content %}

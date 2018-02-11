@@ -14,13 +14,13 @@ DEBUG = True
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 # Application definition
-
 INSTALLED_APPS = [
 	'django.contrib.admin',
 	'django.contrib.auth',
 	'django.contrib.contenttypes',
 	'django.contrib.sessions',
 	'django.contrib.sites',
+	'django.contrib.flatpages',
 	'django.contrib.messages',
 	'django.contrib.staticfiles',
 
@@ -35,7 +35,9 @@ INSTALLED_APPS = [
 	'hijack_admin',
 	'markdown_deux',
 	'silk',
-	"taggit",
+	'taggit',
+
+	'import_export',
 
 	'accounts',
 	'assemblee',
@@ -117,7 +119,9 @@ LOGIN_URL = '/accounts/login/'
 
 SITE_ID = 1
 LOGIN_REDIRECT_URL = '/'
+# noinspection SpellCheckingInspection
 SOCIALACCOUNT_QUERY_EMAIL = True
+# noinspection SpellCheckingInspection,SpellCheckingInspection
 SOCIALACCOUNT_PROVIDERS = {
 	'facebook': {
 		'METHOD': 'oauth2',
@@ -147,6 +151,7 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = "username_email"
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
+ACCOUNT_LOGIN_ON_PASSWORD_RESET = True
 ACCOUNT_LOGOUT_ON_GET = True
 ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = "/"
 ACCOUNT_SESSION_REMEMBER = False
@@ -154,19 +159,22 @@ ACCOUNT_PRESERVE_USERNAME_CASING = False
 
 ACCOUNT_FORMS = {'login': 'accounts.forms.UserLoginForm'}
 
+# noinspection SpellCheckingInspection
 EMAIL_BACKEND = 'django_smtp_ssl.SSLEmailBackend'
-EMAIL_HOST = 'smtp.zoho.com'
-EMAIL_HOST_USER = 'noreply@righi-network.com'
+
+# noinspection SpellCheckingInspection,SpellCheckingInspection
+EMAIL_HOST = 'authsmtp.securemail.pro'
+EMAIL_HOST_USER = 'no-reply@righi-network.com'
 EMAIL_HOST_PASSWORD = private_settings.EMAIL_HOST_PASSWORD
 EMAIL_PORT = 465
 EMAIL_USE_SSL = True
 EMAIL_USE_TLS = False
-DEFAULT_FROM_EMAIL = 'noreply@righi-network.com'
+DEFAULT_FROM_EMAIL = 'no-reply@righi-network.com'
 
 # Impostazioni hijack
 
 HIJACK_LOGIN_REDIRECT_URL = '/'
-HIJACK_LOGOUT_REDIRECT_URL = '/admin/auth/user/'
+HIJACK_LOGOUT_REDIRECT_URL = '/gestione/'
 HIJACK_USE_BOOTSTRAP = True
 HIJACK_ALLOW_GET_REQUESTS = True
 

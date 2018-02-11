@@ -1,10 +1,14 @@
 {% extends "base.html" %}
 
+{% block breadcrumb %}
+    <a class="section" href="{{ BASE_DIR }}/">Home</a>
+{% endblock %}
+
 {% block content %}
     {% if tutors|length > 0 %}
         <table class="ui
-
-                {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} sortable celled table">
+                {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %}
+                sortable celled table">
             <thead>
             <tr>
                 <th>#</th>
@@ -42,5 +46,7 @@
             {% endfor %}
             </tbody>
         </table>
+    {% else %}
+        <div class="ui orange centered huge header"><i>Nessun tutor proposto</i></div>
     {% endif %}
 {% endblock %}

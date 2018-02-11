@@ -147,6 +147,7 @@
                                 {% endif %}
 
                                 <a class="ui
+
                                         {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} bottom attached button"
                                    href="{{ post_url }}">
                                     Leggi <i class="long arrow right icon"></i>
@@ -201,23 +202,22 @@
                     {% endif %}
 
                     <!-- Tag Widget -->
-                    <div class="ui fluid card">
-                        <div class="content">
-                            <div class="header">Tag <i class="ui right floated tag icon"></i></div>
-                        </div>
-                        <div class="content">
-                            {% if tags|length > 0 %}
+                    {% if tags|length > 0 %}
+                        <div class="ui fluid card">
+                            <div class="content">
+                                <div class="header">Tag <i class="ui right floated tag icon"></i></div>
+                            </div>
+                            <div class="content">
                                 <div class="ui tag labels">
                                     {% for tag in tags %}
                                         <a class="ui label"
                                            href="/?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}tag={{ tag }}">{{ tag }}</a>
                                     {% endfor %}
                                 </div>
-                            {% else %}
-                                <div class="ui yellow header">Nessun post taggato</div>
-                            {% endif %}
+
+                            </div>
                         </div>
-                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

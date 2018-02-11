@@ -25,7 +25,7 @@
                                     <input type="radio" name="choice" checked="" tabindex="0" class="hidden"
                                            value="{{ choice.id }}"
                                            id="choice{{ forloop.counter }}"/>
-                                    <label>
+                                    <label for="choice{{ forloop.counter }}">
                                         {{ choice.choice_text }}
                                         {% if user.studente.is_rapistituto or user.is_superuser %}
                                             <span class="edit">

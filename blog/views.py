@@ -57,6 +57,7 @@ def post_create(request):
             messages.success(request, "Post Aggiunto")
             return HttpResponseRedirect(instance.get_absolute_url())
         context = {
+	        'title': 'Aggiungi post',
             "form": form,
         }
         return render(request, "blog/post_form.html", context)
@@ -152,7 +153,7 @@ def post_update(request, slug=None):
         return HttpResponseRedirect(instance.get_absolute_url())
 
     context = {
-        "title": instance.title,
+	    "title": "Modifica post",
         "instance": instance,
         "form": form,
     }

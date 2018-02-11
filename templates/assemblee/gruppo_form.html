@@ -9,21 +9,11 @@
     <i class="right angle icon divider"></i>
     <a class="section" href="{% url "assemblee:all_assemblee" %}">Assemblee</a>
     <i class="right angle icon divider"></i>
-    <a class="section" href="{% url "assemblee:assemblea" gruppo.turno.assemblea.id %}">Assemblea
-        del {{ gruppo.turno.assemblea.data }}</a>
+    <a class="section" href="{% url "assemblee:assemblea" turno.assemblea.id %}">Assemblea
+        del {{ turno.assemblea.data }}</a>
     <i class="right angle icon divider"></i>
-    {% if gruppo %}
-        <a class="section" href="{% url "assemblee:turno" gruppo.turno.assemblea.id gruppo.turno.id %}">Turno
-            delle {{ gruppo.turno.inizio }}
-            - {{ gruppo.turno.fine }}</a>
-        <i class="right angle icon divider"></i>
-        <a class="section"
-           href="{% url "assemblee:gruppo" gruppo.turno.assemblea.id gruppo.turno.id gruppo.id %}">{{ gruppo.titolo }}</a>
-        <i class="right angle icon divider"></i>
-        <div class="active section">Modifica</div>
-    {% else %}
-        <div class="active section">{{ title }}</div>
-    {% endif %}
+    <a class="section" href="{% url "assemblee:turno" turno.assemblea.id turno.id %}">Turno delle {{ turno.inizio }}</a>
+
 {% endblock %}
 
 {% block content %}

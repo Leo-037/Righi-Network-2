@@ -1,17 +1,16 @@
 import random
 
 from django.contrib import messages
-from django.contrib.auth import (
-	authenticate,
-	get_user_model,
-)
+from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, Http404, get_object_or_404
 
 from .forms import GuestRegisterForm, StudenteRegisterForm, DummySignupForm
 from .models import Studente, DummyUser, Guest
 
-User = get_user_model()
+
+# User = get_user_model()
 
 
 @login_required()
@@ -31,7 +30,7 @@ def guests_view(request):
 			form = GuestRegisterForm()
 
 			return render(request, 'account/righinetwork/lista_ospiti.html',
-			              {'form': form, 'ospiti': ospiti})
+			              {'form': form, 'ospiti': ospiti, 'title': "Ospiti"})
 
 		elif request.method == "POST":
 			form = GuestRegisterForm(request.POST)
@@ -40,7 +39,7 @@ def guests_view(request):
 
 				new_password = generate_password(8)
 
-				new_user = User(username = username)
+				new_user = User.objects.create_user(username = username)
 				new_user.set_password(new_password)
 				new_user.save()
 
@@ -49,7 +48,7 @@ def guests_view(request):
 				ospite = Guest(user = user, password = new_password)
 				ospite.save()
 
-				return redirect("/")
+				return redirect("accounts:ospiti")
 	else:
 		return Http404
 
@@ -61,9 +60,7 @@ def aggiungi_ospite_view(request):
 
 
 def signup_view(request):
-	print("Chiamata")
 	if request.method == "POST":
-		print("Post")
 		form = DummySignupForm(request.POST)
 
 		if form.is_valid():
@@ -77,9 +74,9 @@ def signup_view(request):
 			nome = dummy.first_name
 			cognome = dummy.last_name
 
-			new_user = User(username = username, first_name = nome.capitalize(), last_name = cognome.capitalize(),
-			                email = email)
-			new_user.set_password(new_password)
+			new_user = User.objects.create_user(username = username, password = new_password,
+			                                    first_name = nome.capitalize(), last_name = cognome.capitalize(),
+			                                    email = email)
 			new_user.save()
 
 			user = authenticate(username = username, password = new_password)
@@ -121,6 +118,7 @@ def classi_view(request):
 					classe_completa = (classe, sezione)
 					classi_complete.append(classe_completa)
 
+		# statistiche
 		studenti_totali = len(Studente.objects.all())
 		studenti_attivati = len(Studente.objects.filter(is_attivato = True))
 		ospiti = len(Guest.objects.all())
@@ -152,9 +150,7 @@ def dettagli_classe_view(request, classe, sezione):
 
 		elif request.method == "POST":
 			form = StudenteRegisterForm(request.POST)
-			print(form.is_valid())
 			if form.is_valid():
-				print("Valido!")
 
 				nome = form.cleaned_data['nome']
 				cognome = form.cleaned_data['cognome']
@@ -249,10 +245,11 @@ def elimina_studente_view(request, username):
 	if request.user.studente.is_rapistituto or request.user.is_superuser:
 		user = User.objects.get(username = username)
 		studente = Studente.objects.get(user = user)
+		classe = studente.classe
+		sezione = studente.sezione
 		studente.delete()
 		user.delete()
-		url = request.get_full_path()[:14]
-		return redirect(url)
+		return redirect("accounts:classe", classe, sezione)
 	else:
 		raise Http404
 
@@ -262,10 +259,12 @@ def elimina_dummy_view(request, username):
 	if request.user.studente.is_rapistituto or request.user.is_superuser:
 		dummy = DummyUser.objects.get(username = username)
 		studente = dummy.studente
+		classe = studente.classe
+		sezione = studente.sezione
 		studente.delete()
 		dummy.delete()
-		url = request.get_full_path()[:14]
-		return redirect(url)
+		url = request.get_full_path()[:30]
+		return redirect("accounts:classe", classe, sezione)
 	else:
 		raise Http404
 

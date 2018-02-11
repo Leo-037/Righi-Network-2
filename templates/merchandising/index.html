@@ -21,8 +21,6 @@
     <a class="section" href="{{ BASE_DIR }}/">Home</a>
 {% endblock %}
 
-<!-- TODO: sostituire cards con griglia (es. Amazon)?-->
-
 {% block content %}
     <div class="ui hidden divider"></div>
     <div class="ui stackable two column grid">
@@ -125,13 +123,9 @@
                                 {% if user.is_superuser or user.studente.is_rapistituto %}
                                     <div class="ui fitted divider"></div>
                                     <div class="content">
-                                        <a href="{% url "merchandising:update" object.id %}"
-                                           class="ui yellow left floated button">Modifica</a>
-                                        <div data-href="{% url "merchandising:delete" object.id %}"
-                                             class="ui red left floated button delete-button">Elimina
-                                        </div>
                                         <form onsubmit="window.location = './{{ object.id }}/add_tag/' + tag.value; return false;"
-                                              class="ui right floated right aligned form">
+                                              class="ui aligned form">
+                                            {% csrf_token %}
                                             <div class="ui right labeled left icon input">
                                                 <i class="tags icon"></i>
                                                 <input id="tag" placeholder="Aggiungi Tag"
@@ -141,11 +135,19 @@
                                             </div>
                                         </form>
                                     </div>
+                                    <div class="content">
+                                        <a href="{% url "merchandising:update" object.id %}"
+                                           class="ui yellow button">Modifica</a>
+                                        <div data-href="{% url "merchandising:delete" object.id %}"
+                                             class="ui red button delete-button">Elimina
+                                        </div>
+                                    </div>
                                 {% endif %}
 
                                 <div class="actions">
-                                    <div class="ui deny
-                                            {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} button">
+                                    <div class="ui deny {% if user.studente.colore %}
+                                            {{ user.studente.colore }}{% else %}green{% endif %}
+                                                button">
                                         Ok
                                     </div>
                                 </div>
@@ -176,6 +178,7 @@
                         {% if request.GET.q or request.GET.tag %}che corrispondono alla ricerca{% endif %}</i></div>
                 {% endif %}
             </div>
+
             <!-- colonna di destra -->
             <div class="four wide column">
 
@@ -200,54 +203,55 @@
                     {% endif %}
 
                     <!-- Search widget -->
-                    <div class="ui fluid card">
-                        <div class="content">
-                            <div class="ui action fluid input">
-                                <input id="search" placeholder="Cerca">
-                                <button class="ui icon button" id="search-button">
-                                    <i class="search icon"></i>
-                                </button>
-                                {% if request.GET.q or request.GET.tag %}
-                                    <button onclick="location.href='{% url "merchandising:index" %}';"
-                                            class="ui negative icon button">
-                                        <i class="close icon"></i>
+                    {% if object_list|length > 0 %}
+                        <div class="ui fluid card">
+                            <div class="content">
+                                <div class="ui action fluid input">
+                                    <input id="search" placeholder="Cerca">
+                                    <button class="ui icon button" id="search-button">
+                                        <i class="search icon"></i>
                                     </button>
-                                {% endif %}
-                            </div>
-                        </div>
-                        {% if request.GET.q or request.GET.tag %}
-                            <div class="extra content">
-                                <div class="ui large labels">
-                                    {% if request.GET.q %}
-                                        <div class="ui label"><i class="search icon"></i>{{ request.GET.q|title }}
-                                        </div>
-                                    {% endif %}
-                                    {% if request.GET.tag %}
-                                        <div class="ui tag label">{{ request.GET.tag|title }}</div>
+                                    {% if request.GET.q or request.GET.tag %}
+                                        <button onclick="location.href='{% url "merchandising:index" %}';"
+                                                class="ui negative icon button">
+                                            <i class="close icon"></i>
+                                        </button>
                                     {% endif %}
                                 </div>
                             </div>
-                        {% endif %}
-                    </div>
+                            {% if request.GET.q or request.GET.tag %}
+                                <div class="extra content">
+                                    <div class="ui large labels">
+                                        {% if request.GET.q %}
+                                            <div class="ui label"><i class="search icon"></i>{{ request.GET.q|title }}
+                                            </div>
+                                        {% endif %}
+                                        {% if request.GET.tag %}
+                                            <div class="ui tag label">{{ request.GET.tag|title }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
 
                     <!-- Tag Widget -->
-                    <div class="ui fluid card">
-                        <div class="content">
-                            <div class="header">Tag <i class="ui right floated tag icon"></i></div>
-                        </div>
-                        <div class="content">
-                            {% if tags|length > 0 %}
+                    {% if tags|length > 0 %}
+                        <div class="ui fluid card">
+                            <div class="content">
+                                <div class="header">Tag <i class="ui right floated tag icon"></i></div>
+                            </div>
+                            <div class="content">
                                 <div class="ui tag labels">
                                     {% for tag in tags %}
                                         <a class="ui label"
                                            href="{% url "merchandising:index" %}?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}tag={{ tag }}">{{ tag }}</a>
                                     {% endfor %}
                                 </div>
-                            {% else %}
-                                <div class="ui yellow header">Nessun prodotto taggato</div>
-                            {% endif %}
+
+                            </div>
                         </div>
-                    </div>
+                    {% endif %}
 
                 </div>
             </div>

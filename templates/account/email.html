@@ -30,11 +30,11 @@
                                     <div class="column">
                                         <div class="field">
                                             <div class="ui radio checkbox">
+                                                <label for="email_radio_{{ forloop.counter }}">{{ emailaddress.email }}</label>
                                                 <input id="email_radio_{{ forloop.counter }}" type="radio" name="email"
                                                        {% if emailaddress.primary or user.emailaddress_set.count == 1 %}checked="checked"{% endif %}
                                                        value="{{ emailaddress.email }}" class="hidden" tabindex="0"
                                                        name="email_address"/>
-                                                <label>{{ emailaddress.email }}</label>
                                             </div>
                                         </div>
                                     </div>
@@ -42,8 +42,7 @@
                                         <h5>
                                             {% if emailaddress.verified %}
                                                 <div class="ui
-
-                                                        {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} label">
+                            {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} label">
                                                     Verificato
                                                 </div>
                                             {% else %}
@@ -58,9 +57,8 @@
                             {% endfor %}
                         </div>
                         <br>
-                        <div class="ui compact buttons">
+                        <div class="ui three compact buttons">
                             <button class="ui
-
                                     {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} button"
                                     type="submit"
                                     name="action_primary">Rendi principale

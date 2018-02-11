@@ -8,6 +8,7 @@ from righinetwork.settings import EMAIL_HOST_USER
 from .models import *
 
 
+# noinspection SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection
 @login_required
 def list_tutors(request):
 	if not request.user.studente.is_attivato:
@@ -61,7 +62,6 @@ def tutor_form_view(request):
 			studente = request.user.studente
 			cellulare = form.cleaned_data["cellulare"]
 			materia = form.cleaned_data["materia"]
-			max_studenti = form.cleaned_data["max_studenti"]
 
 			prima = form.cleaned_data["prima"]
 			seconda = form.cleaned_data["seconda"]
@@ -76,7 +76,7 @@ def tutor_form_view(request):
 				quarta = True
 				quinta = True
 
-			tutor = Tutor(studente = studente, cellulare = cellulare, materia = materia, max_studenti = max_studenti,
+			tutor = Tutor(studente = studente, cellulare = cellulare, materia = materia,
 			              prima = prima,
 			              seconda = seconda, terza = terza, quarta = quarta, quinta = quinta)
 			tutor.save()

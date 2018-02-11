@@ -118,7 +118,8 @@ def create_choice_view(request, poll_id, n_choices):
 			return redirect('sondaggi:detail', poll.id)
 
 		context = {
-			"form": form,
+			'title': 'Aggiungi scelta',
+			'form': form,
 			"poll": poll,
 		}
 		return render(request, "sondaggi/choice_form.html", context)
@@ -148,6 +149,7 @@ def update_poll_view(request, poll_id):
 			return redirect('sondaggi:detail', poll.id)
 
 		context = {
+			'title': 'Modifica sondaggio',
 			"form": form,
 		}
 		return render(request, "sondaggi/poll_form.html", context)

@@ -1,7 +1,8 @@
 from django.db.models import Q
 from django.http import Http404
 from django.shortcuts import redirect, get_object_or_404
-from django.views.generic import ListView, TemplateView, UpdateView
+from django.urls import reverse_lazy
+from django.views.generic import ListView, TemplateView, UpdateView, DeleteView
 from django.views.generic.edit import CreateView
 
 from merchandising.models import Prodotto
@@ -39,7 +40,7 @@ class CreateProdotto(CreateView):
 	# form_class = ProdottoForm
 
 	title = "Aggiungi prodotto"
-	success_url = 'merchandising:index'
+	success_url = reverse_lazy('merchandising:index')
 	template_name = "merchandising/prodotto_form.html"
 
 	def get_context_data(self, **kwargs):
@@ -59,8 +60,12 @@ class UpdateProdotto(UpdateView):
 		return context
 
 
-class DeleteProdotto(UpdateView):
+class DeleteProdotto(DeleteView):
 	model = Prodotto
+	success_url = reverse_lazy('merchandising:index')
+
+	def get(self, *args, **kwargs):
+		return self.post(*args, **kwargs)
 
 
 class Index(ListView):

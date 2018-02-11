@@ -18,7 +18,6 @@
                 <div class="inline field">
                     {{ field.errors }}
                     {{ field.label_tag }} {{ field }}
-
                 </div>
             {% endfor %}
             <button class="ui {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} button"
@@ -83,6 +82,9 @@
                 <th>Username</th>
                 <th>Email</th>
                 <th>Modifica</th>
+                {% if user.studente.is_rapistituto or user.is_superuser %}
+                    <th>Admin</th>
+                {% endif %}
             </tr>
             </thead>
             <tbody>
@@ -105,6 +107,14 @@
                             </a>
                         </div>
                     </td>
+                    {% if user.studente.is_rapistituto or user.is_superuser %}
+                        <td>
+                            <form action="/hijack/{{ studente.user.id }}/" method="post" class="ui form">
+                                {% csrf_token %}
+                                <button type="submit" class="ui compact fluid button">Hijack</button>
+                            </form>
+                        </td>
+                    {% endif %}
                 </tr>
             {% endfor %}
             </tbody>

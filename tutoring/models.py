@@ -9,7 +9,6 @@ class Tutor(models.Model):
 
 	materia = models.CharField(max_length = 15)
 
-	max_studenti = models.PositiveIntegerField(verbose_name = "Numero massimo studenti")
 	n_studenti = models.PositiveIntegerField(default = 0)
 
 	prima = models.BooleanField(default = True)
@@ -32,7 +31,7 @@ class TutorForm(ModelForm):
 	class Meta:
 		model = Tutor
 
-		fields = ['materia', 'cellulare', 'max_studenti', 'prima', 'seconda', 'terza', 'quarta', 'quinta']
+		fields = ['materia', 'cellulare', 'prima', 'seconda', 'terza', 'quarta', 'quinta']
 
 	def clean_materia(self):
 		materia = self.cleaned_data.get("materia")

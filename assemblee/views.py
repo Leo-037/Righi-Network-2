@@ -55,7 +55,8 @@ def create_gruppo_view(request, id_assemblea, id_turno):
 			turno = Turno.objects.get(id = id_turno)
 			form = GruppoForm(initial = {'turno': turno})
 			form.fields['turno'].widget = forms.HiddenInput()
-			return render(request, 'assemblee/gruppo_form.html', {'title': "Aggiungi Gruppo", 'form': form})
+			return render(request, 'assemblee/gruppo_form.html',
+			              {'title': "Aggiungi Gruppo", 'turno': turno, 'form': form})
 		elif request.method == "POST":
 			form = GruppoForm(request.POST)
 			form.save()
@@ -228,6 +229,7 @@ def update_gruppo_view(request, id_assemblea, id_turno, id_gruppo):
 	context = {
 		"title": "Modifica gruppo",
 		"gruppo": gruppo,
+		'turno': gruppo.turno,
 		"form": form,
 	}
 	return render(request, "assemblee/gruppo_form.html", context)

@@ -4,44 +4,51 @@
     {{ title }}
 {% endblock head_title %}
 
+{% block breadcrumb %}
+    <a class="section" href="{{ BASE_DIR }}/">Home</a>
+    <i class="right angle icon divider"></i>
+    <a class="section" href="{% url "accounts:gestione" %}">Gestione classi</a>
+{% endblock breadcrumb %}
 
 {% block content %}
-    <nav class="breadcrumb">
-        <span class="breadcrumb-item"><a href="{{ BASE_DIR }}/">Home</a></span>
-        <span class="breadcrumb-item"><a href="{% url "accounts:gestione" %}">Gestione Classi</a></span>
-        <span class="breadcrumb-item active">Ospiti</span>
-    </nav>
-
-    <div class="row">
-        <div class="col-md-10 offset-md-1">
-            <h1 class="text-center text-primary">Ospiti</h1>
-            <hr>
-            {{ form.as_p }}
-            <br>
-            <div class="col-md-12">
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Username</th>
-                        <th>Password</th>
-                        <th>Modifica</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for ospite in ospiti %}
-                        <tr>
-                            <td>{{ forloop.counter }}</td>
-                            <td>{{ ospite.user.username }}</td>
-                            <td>{{ ospite.password }}</td>
-                            <td><a class="btn btn-danger confirm-delete" role="button"
-                                   href="{% url 'accounts:delete-guest' ospite.user.username %}">Elimina</a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+    <form class="ui form" method="post">
+        {% csrf_token %}
+        <div class="fields">
+            {% for field in form %}
+                <div class="inline field">
+                    {{ field.errors }}
+                    {{ field.label_tag }} {{ field }}
+                </div>
+            {% endfor %}
+            <button class="ui {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} button"
+                    type="submit">Aggiungi ospite
+            </button>
         </div>
-    </div>
+    </form>
+    {% if ospiti|length > 0 %}
+        <table class="ui sortable celled striped
+                {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} table">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Username</th>
+                <th>Password</th>
+                <th><i class="ui wrench icon"></i></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for ospite in ospiti %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ ospite.user.username }}</td>
+                    <td>{{ ospite.password }}</td>
+                    <td><a class="btn btn-danger confirm-delete" role="button"
+                           href="{% url 'accounts:delete-guest' ospite.user.username %}">Elimina</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
 {% endblock content %}

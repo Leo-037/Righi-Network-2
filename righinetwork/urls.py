@@ -15,6 +15,7 @@ urlpatterns = [
 	path('sondaggi/', include('sondaggi.urls', namespace = "sondaggi")),
 	path('merchandising/', include('merchandising.urls', namespace = "merchandising")),
 	path('tutoring/', include('tutoring.urls', namespace = 'tutoring')),
+	path('pages/', include('django.contrib.flatpages.urls')),
 	path('hijack/', include('hijack.urls')),
 	path('silk/', include('silk.urls', namespace = 'silk')),
 	path('summernote/', include('django_summernote.urls')),

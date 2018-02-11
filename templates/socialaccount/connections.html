@@ -37,7 +37,8 @@
                                             <input id="id_account_{{ base_account.id }}" type="radio"
                                                    name="account"
                                                    value="{{ base_account.id }}"/>
-                                            <label>{{ account.get_brand.name }} <i
+                                            <label for="id_account_{{ base_account.id }}">{{ account.get_brand.name }}
+                                                <i
                                                     class="ui {{ account.get_brand.name|lower }} icon"></i></label>
                                         </div>
                                     </div>
