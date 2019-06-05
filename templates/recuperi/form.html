@@ -7,7 +7,7 @@
 {% block breadcrumb %}
     <a class="section" href="{{ BASE_DIR }}/">Home</a>
     <i class="right angle icon divider"></i>
-    <a class="section" href="{% url "tutoring:index" %}">Tutoring</a>
+    <a class="section" href="{% url "recuperi:main" %}">Settimana dei recuperi</a>
 {% endblock %}
 
 {% block content %}
@@ -16,7 +16,7 @@
         {{ form.as_p }}
         <input type='submit'
                class='ui {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} button'
-               value='Aggiungi Tutor'/>
+               value='{{ title }}'/>
     </form>
     <div class="ui hidden divider"></div>
 {% endblock content %}

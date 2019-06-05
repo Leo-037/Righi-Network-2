@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+
+{% block head_extra %}
+    <script>
+    </script>
+
+{% endblock head_extra %}
+
+{% block breadcrumb %}
+    <a class="section" href="{{ BASE_DIR }}/">Home</a>
+{% endblock %}
+
+{% block content %}
+    <table class="ui celled compact fluid
+            {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} table">
+        <tbody>
+        <tr>
+            {% if gruppo_lunedi %}
+                <th class="ui center aligned header">{{ gruppo_lunedi.titolo }}<br><span><i
+                        class="ui map marker alternate arrow icon"></i></span>{{ gruppo_lunedi.aula }}</th>
+            {% else %}
+                <th class="ui center aligned disabled header">Lunedi</th>
+            {% endif %}
+            {% if gruppo_martedi %}
+                <th class="ui center aligned header">{{ gruppo_martedi.titolo }}<br><span><i
+                        class="ui map marker alternate arrow icon"></i></span>{{ gruppo_martedi.aula }}</th>
+            {% else %}
+                <th class="ui center aligned disabled header">Martedi</th>
+            {% endif %}
+            {% if gruppo_mercoledi %}
+                <th class="ui center aligned header">{{ gruppo_mercoledi.titolo }}<br><span><i
+                        class="ui map marker alternate arrow icon"></i></span>{{ gruppo_mercoledi.aula }}</th>
+            {% else %}
+                <th class="ui center aligned disabled header">Mercoledi</th>
+            {% endif %}
+            {% if gruppo_giovedi %}
+                <th class="ui center aligned header">{{ gruppo_giovedi.titolo }}<br><span><i
+                        class="ui map marker alternate arrow icon"></i></span>{{ gruppo_giovedi.aula }}</th>
+            {% else %}
+                <th class="ui center aligned disabled header">Giovedi</th>
+            {% endif %}
+            {% if gruppo_venerdi %}
+                <th class="ui center aligned header">{{ gruppo_venerdi.titolo }}<br><span><i
+                        class="ui map marker alternate arrow icon"></i></span>{{ gruppo_venerdi.aula }}</th>
+            {% else %}
+                <th class="ui center aligned disabled header">Venerdi</th>
+            {% endif %}
+        </tr>
+        </tbody>
+    </table>
+    <div class="ui hidden divider"></div>
+    <div class="ui stackable two column grid">
+        <div class="row">
+            <div class="{% if user.is_superuser or user.studente.is_rapistituto %}eleven{% else %}sixteen{% endif %} wide column">
+                <div class="ui raised stackable cards">
+                    {% for gruppo in gruppi %}
+
+                        <div class="ui fluid card" id="gruppo.id">
+
+                            {% if user.is_superuser or user.studente.is_rapistituto %}
+                                <div class="edit">
+                                    <div class="ui three top attached buttons">
+                                        <a href="{% url "recuperi:stampa_iscritti" gruppo.id %}"
+                                           class="ui blue button">Stampa</a>
+                                        <a href="{% url "recuperi:update_gruppo" gruppo.id %}"
+                                           class="ui yellow button">Modifica</a>
+                                        <div data-href="{% url "recuperi:delete_gruppo" gruppo.id %}"
+                                             class="ui red button delete-button">Elimina
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            <div class="content">
+                                <div class="ui right floated labels">
+                                    {% if user.is_superuser or user.studente.is_rapistituto %}
+                                        {% if gruppo.prima %}
+                                            <div class="ui red label">1^</div> {% endif %}
+                                        {% if gruppo.seconda %}
+                                            <div class="ui orange label">2^</div>{% endif %}
+                                        {% if gruppo.terza %}
+                                            <div class="ui olive label">3^</div>{% endif %}
+                                        {% if gruppo.quarta %}
+                                            <div class="ui teal label">4^</div>{% endif %}
+                                        {% if gruppo.quinta %}
+                                            <div class="ui violet label">5^</div>{% endif %}
+                                    {% endif %}
+                                    <div class="ui {% if not gruppo.lunedi %} grey
+                                        {% elif gruppo in gruppi_iscritto and gruppo.lunedi %}green{% elif gruppo_lunedi or gruppo.iscritti == gruppo.iscritti_massimi %}red{% else %}blue{% endif %} label">
+                                        Lun
+                                    </div>
+                                    <div class="ui {% if not gruppo.martedi %} grey
+                                        {% elif gruppo in gruppi_iscritto and gruppo.martedi %}green{% elif gruppo_martedi or gruppo.iscritti == gruppo.iscritti_massimi %}red{% else %}blue{% endif %} label">
+                                        Mar
+                                    </div>
+                                    <div class="ui {% if not gruppo.mercoledi %} grey
+                                        {% elif gruppo in gruppi_iscritto and gruppo.mercoledi %}green{% elif gruppo_mercoledi or gruppo.iscritti == gruppo.iscritti_massimi %}red{% else %}blue{% endif %} label">
+                                        Mer
+                                    </div>
+                                    <div class="ui {% if not gruppo.giovedi %} grey
+                                        {% elif gruppo in gruppi_iscritto and gruppo.giovedi %}green{% elif gruppo_giovedi or gruppo.iscritti == gruppo.iscritti_massimi %}red{% else %}blue{% endif %} label">
+                                        Gio
+                                    </div>
+                                    <div class="ui {% if not gruppo.venerdi %} grey
+                                        {% elif gruppo in gruppi_iscritto and gruppo.venerdi %}green{% elif gruppo_venerdi or gruppo.iscritti == gruppo.iscritti_massimi %}red{% else %}blue{% endif %} label">
+                                        Ven
+                                    </div>
+
+                                </div>
+                                <div class="header">
+                                    <div class="ui big header"><a
+                                            href="{% url "recuperi:gruppo" gruppo.id %}">{{ gruppo.titolo }}</a>
+                                    </div>
+                                </div>
+                                <div class="meta">
+                                    <div class="ui big grey header"><span><i
+                                            class="ui user icon"></i></span>Tenuto da {{ gruppo.host }}<br>
+                                        <span><i class="ui map marker alternate arrow icon"></i></span>{{ gruppo.aula }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="content">
+                                <div class="description">
+                                    <div class="ui small grey header">{{ gruppo.descrizione }}</div>
+                                </div>
+                            </div>
+
+                            <!-- iscritti -->
+                            <div class="ui extra clearing content">
+                                <div class="ui left floated grey header">{{ gruppo.iscritti }}
+                                    / {{ gruppo.iscritti_massimi }}
+                                    iscritti
+                                </div>
+                                {% if gruppo.iscritti == gruppo.iscritti_massimi %}
+                                    <div class="ui right floated red header">Gruppo pieno</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="ui two bottom attached buttons">
+                                <a href="{% url "recuperi:gruppo" gruppo.id %}"
+                                   class="ui blue button">Mostra gruppo</a>
+                                {% if not gruppo in gruppi_iscritto %}
+                                    <a class="ui green
+{% if gruppo.iscritti == gruppo.iscritti_massimi or gruppo.lunedi and gruppo_lunedi or gruppo.martedi and gruppo_martedi or gruppo.mercoledi and gruppo_mercoledi or gruppo.giovedi and gruppo_giovedi or gruppo.venerdi and gruppo_venerdi or not iscrizioni_aperte %}
+                                disabled{% endif %} button" href="{% url "recuperi:iscrizione" gruppo.id %}">
+                                        Iscriviti</a>
+                                {% else %}
+                                    <a class="ui red {% if not iscrizioni_aperte %}disabled {% endif %}button"
+                                       href="{% url "recuperi:disiscrizione" gruppo.id %}">
+                                        Disiscriviti</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% if user.studente.is_rapistituto or user.is_superuser %}
+                <div class="five wide column">
+                    <div class="ui stackable
+                            {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} cards">
+                        <div class="ui fluid card">
+                            <div class="content">
+                                <div class="header">Strumenti <i class="ui right floated pencil icon"></i></div>
+                            </div>
+                            <div class="content">
+                                <div class="ui two vertical buttons">
+                                    <a href="{% url "recuperi:create_gruppo" %}"
+                                       class="ui fluid blue button">Aggiungi gruppo</a>
+                                    {% if gruppi|length > 0 %}
+                                        <div class="ui fluid yellow button edit-button">Mofifica gruppi</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="content">
+                                {% if not iscrizioni_aperte %}
+                                    <a href="{% url "recuperi:apri_iscrizioni" %}"
+                                       class="ui green fluid button">Apri
+                                        iscrizioni</a>
+                                {% else %}
+                                    <a href="{% url "recuperi:chiudi_iscrizioni" %}"
+                                       class="ui orange fluid button">Chiudi iscrizioni</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock content %}

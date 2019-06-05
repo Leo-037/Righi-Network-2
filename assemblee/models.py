@@ -21,12 +21,12 @@ class Turno(models.Model):
 
 
 class Gruppo(models.Model):
-	titolo = models.TextField()
-	aula = models.TextField()
-	descrizione = models.TextField()
-	host = models.TextField(verbose_name = "Tenuto da ")
+	titolo = models.TextField(blank = True, null = True)
+	aula = models.TextField(blank = True, null = True)
+	descrizione = models.TextField(default = "", blank = True, null = True)
+	host = models.TextField(blank = True, null = True, verbose_name = "Tenuto da ")
 
-	iscritti_massimi = models.PositiveIntegerField()
+	iscritti_massimi = models.PositiveIntegerField(default = 20)
 	iscritti = models.PositiveIntegerField(default = 0)
 
 	turno = models.ForeignKey(Turno, on_delete = models.CASCADE)

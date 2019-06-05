@@ -203,7 +203,8 @@ def clean_username(nome, cognome):
 	newusername = newusername.replace("ì", "i")
 	newusername = newusername.replace("ò", "o")
 	newusername = newusername.replace("ù", "u")
-	while len(User.objects.filter(username = newusername)) != 0:
+	while len(User.objects.filter(username = newusername)) != 0 or len(
+			DummyUser.objects.filter(username = newusername)) != 0:
 		pezzi = newusername.split("_")
 		numero = pezzi[-1]
 		if numero.isdigit():
@@ -263,7 +264,6 @@ def elimina_dummy_view(request, username):
 		sezione = studente.sezione
 		studente.delete()
 		dummy.delete()
-		url = request.get_full_path()[:30]
 		return redirect("accounts:classe", classe, sezione)
 	else:
 		raise Http404

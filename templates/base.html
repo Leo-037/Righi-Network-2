@@ -11,15 +11,16 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>{% if title %}RN - {{ title }}{% else %}Righi-Network{% endif %}</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.css"
-          integrity="sha256-/Z28yXtfBv/6/alw+yZuODgTbKZm86IKbPE/5kjO/xY=" crossorigin="anonymous"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css"
+          integrity="sha256-9mbkOfVho3ZPXfM7W8sV2SndrGDuh7wuyLjtsWeTI1Q=" crossorigin="anonymous"/>
     <link rel="stylesheet" type="text/css" href="{% static 'hijack/hijack-styles.css' %}"/>
     <link href='https://fonts.googleapis.com/css?family=Roboto|Lato|Open+Sans' rel='stylesheet'>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"
             integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
             crossorigin="anonymous"></script>
     {#    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>#}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"
+            integrity="sha256-t8GepnyPmw9t+foMh3mKNvcorqNHamSKtKRxxpUEgFI=" crossorigin="anonymous"></script>
     <script>
         window.fbAsyncInit = function () {
             FB.init({
@@ -230,10 +231,10 @@
 <!-- sidebar -->
 <div class="ui main inverted vertical menu sidebar" id="main_sidebar">
     <div class="item">
-        <a class="ui logo icon image" href="/" style="margin-right: 1rem" type="image/png">
+        <!--<a class="ui logo icon image" href="/" style="margin-right: 1rem" type="image/png">
             <img src="{% static 'righinetwork/r2.png' %}">
-        </a>
-        <a href="{{ BASE_DIR }}/"><b>Righi-Network</b></a>
+        </a>-->
+        <a href="{{ BASE_DIR }}/"><b>Righi-network</b></a>
     </div>
     {% if user.studente.is_rapistituto or user.is_superuser %}
         <div class="item">
@@ -246,6 +247,7 @@
             </div>
         </div>
     {% endif %}
+    <a href="{% url "recuperi:main" %}" class="item"><b>Settimana dei Recuperi</b></a>
     <a href="{% url "assemblee:all_assemblee" %}" class="item"><b>Assemblee d'istituto</b></a>
     <a href="{% url "sondaggi:index" %}" class="item"><b>Sondaggi</b></a>
     <a href="{% url "merchandising:index" %}" class="item"><b>Merchandising</b></a>
@@ -282,7 +284,7 @@
                             <div class="header">Impostazioni</div>
                             <a class="item" href="{% url 'account_email' %}">E-mail</a>
                             <a class="item" href="{% url 'account_reset_password' %}">Password</a>
-                            <a class="item" href="{% url 'socialaccount_connections' %}">Social</a>
+                            <a class="disabled item" href="{% url 'socialaccount_connections' %}">Social</a>
                             <div class="divider"></div>
                             <div class="item">
                                 <span class="text" style="color: {{ user.studente.colore }}">Colore sito</span>
@@ -395,9 +397,7 @@
 </div>
 
 <!-- TODO: controllare in TUTTI i file .html i controlli se l'utente è admin o rappresentante -->
-<!-- TODO: controllare cosa è visibile dai non rappresentanti (es. assemblee.html) -->
 <!-- TODO: ripensare i redirect -->
-<!-- TODO: controllare e ripensare come viene visualizzata la roba (larghezza delle colonne, etc...) -->
 <!-- TODO: aggiungere messaggi dove necessario -->
 <!-- TODO: aggiungere filtro per rappresentanti nelle colonne? -->
 

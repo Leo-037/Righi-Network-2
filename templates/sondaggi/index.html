@@ -27,15 +27,21 @@
                                                 class="ui large yellow pencil right floated icon"></i></a>
                                     </div>
                                 {% endif %}
-                                <i class="ui large {% if poll in poll_votati %}checkmark box{% else %}square outline{% endif %} right floated fitted icon"></i>
+
                                 <div class="content">
-                                    <a class="header" href="{% if poll in poll_votati %}
+                                    {% if poll.rapp_classe and not user.studente.is_rapclasse %}
+                                        <p class="header">Votazione super segreta</p>
+                                    {% else %}
+                                        <i class="ui large {% if poll in poll_votati %}checkmark box{% else %}square outline{% endif %} right floated fitted icon"></i>
+                                        <a class="header" href="{% if poll in poll_votati %}
                                                                 {% url "sondaggi:results" poll.id %}
                                                             {% else %}
                                                                 {% url "sondaggi:detail" poll.id %}
                                                             {% endif %}">
-                                        {{ poll.question }}</a>
-                                    <div class="description">Postato {{ poll.timestamp }}</div>
+                                            {{ poll.question }}</a>
+                                        <div class="description">Postato {{ poll.timestamp }}</div>
+                                    {% endif %}
+
                                 </div>
                             </div>
                         {% endfor %}

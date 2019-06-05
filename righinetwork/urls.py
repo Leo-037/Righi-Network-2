@@ -17,6 +17,7 @@ urlpatterns = [
 	path('tutoring/', include('tutoring.urls', namespace = 'tutoring')),
 	path('pages/', include('django.contrib.flatpages.urls')),
 	path('hijack/', include('hijack.urls')),
+	path('recuperi/', include('recuperi.urls')),
 	path('silk/', include('silk.urls', namespace = 'silk')),
 	path('summernote/', include('django_summernote.urls')),
 	path('', include('blog.urls', namespace = 'blog')),

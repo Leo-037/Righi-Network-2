@@ -5,15 +5,20 @@ from . import private_settings
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# Quick-start development settings - unsuitable for production
+# See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
+
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = private_settings.SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'righi-network.com', 'www.righi-network.com', '206.189.14.45']
+
 
 # Application definition
+
 INSTALLED_APPS = [
 	'django.contrib.admin',
 	'django.contrib.auth',
@@ -43,6 +48,7 @@ INSTALLED_APPS = [
 	'assemblee',
 	'blog',
 	'merchandising',
+	'recuperi',
 	'sondaggi',
 	'tutoring',
 ]
@@ -58,27 +64,28 @@ MIDDLEWARE = [
 	'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-LOGIN_EXEMPT_URLS = (
-	r'^account/',
-)
 
 ROOT_URLCONF = 'righinetwork.urls'
 
 TEMPLATES = [
 	{
-		"BACKEND": "django.template.backends.django.DjangoTemplates",
+		'BACKEND': 'django.template.backends.django.DjangoTemplates',
 		'DIRS': [os.path.join(BASE_DIR, 'templates')],
-		"APP_DIRS": True,
+		'APP_DIRS': True,
 		'OPTIONS': {
 			'context_processors': [
 				'django.template.context_processors.debug',
 				'django.template.context_processors.request',
 				'django.contrib.auth.context_processors.auth',
 				'django.contrib.messages.context_processors.messages',
-			]
-		}
-	}
+			],
+		},
+	},
 ]
+
+LOGIN_EXEMPT_URLS = (
+	r'^account/',
+)
 
 AUTHENTICATION_BACKENDS = (
 	'allauth.account.auth_backends.AuthenticationBackend',
@@ -87,16 +94,20 @@ AUTHENTICATION_BACKENDS = (
 
 WSGI_APPLICATION = 'righinetwork.wsgi.application'
 
+
 # Database
+# https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
 DATABASES = {
 	'default': {
 		'ENGINE': 'django.db.backends.sqlite3',
-		'NAME': os.path.join(BASE_DIR, 'RighinetworkDB'),
+		'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
 	}
 }
 
+
 # Password validation
+# https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
 	{
@@ -112,6 +123,7 @@ AUTH_PASSWORD_VALIDATORS = [
 		'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
 	},
 ]
+
 
 LOGIN_URL = '/accounts/login/'
 
@@ -161,15 +173,14 @@ ACCOUNT_FORMS = {'login': 'accounts.forms.UserLoginForm'}
 
 # noinspection SpellCheckingInspection
 EMAIL_BACKEND = 'django_smtp_ssl.SSLEmailBackend'
-
 # noinspection SpellCheckingInspection,SpellCheckingInspection
 EMAIL_HOST = 'authsmtp.securemail.pro'
-EMAIL_HOST_USER = 'no-reply@righi-network.com'
+EMAIL_HOST_USER = 'smtp@righi-network.com'
 EMAIL_HOST_PASSWORD = private_settings.EMAIL_HOST_PASSWORD
 EMAIL_PORT = 465
 EMAIL_USE_SSL = True
 EMAIL_USE_TLS = False
-DEFAULT_FROM_EMAIL = 'no-reply@righi-network.com'
+DEFAULT_FROM_EMAIL = 'smtp@righi-network.com'
 
 # Impostazioni hijack
 
@@ -194,15 +205,8 @@ USE_L10N = True
 
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
-
 STATIC_URL = '/static/'
-
-STATICFILES_DIRS = [
-	os.path.join(BASE_DIR, "static"),
-]
-
-STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static_cdn")
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), "media_cdn")
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")

@@ -95,6 +95,7 @@ def create_sondaggio_view(request):
 			return redirect('sondaggi:detail', poll.id)
 
 		context = {
+			'title': "Aggiungi sondaggio",
 			"form": form,
 		}
 		return render(request, "sondaggi/poll_form.html", context)

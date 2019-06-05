@@ -20,19 +20,16 @@ class UserResource(resources.ModelResource):
 	# skip_unchanged = True
 	# report_skipped = True
 
-
 class StudenteResource(resources.ModelResource):
 	class Meta:
 		model = Studente
 	# skip_unchanged = True
 	# report_skipped = True
 
-
 class DummyUserModelAdmin(admin.ModelAdmin):
 	list_display = ["username", "first_name", "last_name", "otpassword"]
 	list_filter = ["username", "first_name", "last_name", ]
 	search_fields = ["username", "first_name", "last_name", ]
-
 	class Meta:
 		model = DummyUser
 

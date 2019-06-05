@@ -13,7 +13,7 @@ from .models import *
 def list_tutors(request):
 	if not request.user.studente.is_attivato:
 		raise Http404
-	title = "Ripetizioni fra pari"
+	title = "Tutoring"
 
 	tutors_utente = Tutor.objects.filter(studente = request.user.studente)
 

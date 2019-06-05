@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block head_extra %}
+    <style>
+        {% if not user.is_authenticated %}
+
+            #main_sidebar {
+                display: none !important;
+            }
+
+            #open-main-sidebar {
+
+                display: none !important;
+            }
+        {% endif %}
+
+        #main_breadcrumb {
+
+            display: none !important;
+        }
+    </style>
+{% endblock head_extra %}
+
+{% block breadcrumb %}
+    <a class="section" href="{{ BASE_DIR }}/">Home</a>
+{% endblock %}

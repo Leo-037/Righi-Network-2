@@ -263,7 +263,7 @@ def delete_gruppo_view(request, id_assemblea, id_turno, id_gruppo):
 		gruppo = Gruppo.objects.get(id = id_gruppo)
 		gruppo.delete()
 		messages.success(request, "Cancellato", extra_tags = 'html_safe')
-		return redirect("assemblea:turno", id_assemblea, id_turno)
+		return redirect("assemblee:turno", id_assemblea, id_turno)
 	raise Http404
 
 
@@ -340,8 +340,7 @@ def iscrizione_view(request, id_assemblea, id_turno, id_gruppo):
 
 	assemblea = Assemblea.objects.get(id = id_assemblea)
 	if not assemblea.mostra and not (request.user.studente.is_rapistituto or request.user.is_superuser):
-		if not assemblea.iscrizioni_aperte:
-			raise Http404
+		raise Http404
 
 	turno = Turno.objects.get(id = id_turno)
 
@@ -352,7 +351,7 @@ def iscrizione_view(request, id_assemblea, id_turno, id_gruppo):
 			gruppo.save()
 
 	gruppo = Gruppo.objects.get(id = id_gruppo)
-	if not gruppo.iscritti == gruppo.iscritti_massimi:
+	if not gruppo.iscritti == gruppo.iscritti_massimi and assemblea.iscrizioni_aperte:
 		iscritto = Iscritto(studente = request.user.studente, gruppo = gruppo)
 		gruppo.iscritti += 1
 		iscritto.save()
@@ -372,30 +371,25 @@ def disiscrizione_view(request, id_assemblea, id_turno, id_gruppo):
 
 	assemblea = Assemblea.objects.get(id = id_assemblea)
 	if not assemblea.mostra and not (request.user.studente.is_rapistituto or request.user.is_superuser):
-		if not assemblea.iscrizioni_aperte:
-			raise Http404
+		raise Http404
 
-	gruppo = Gruppo.objects.get(id = id_gruppo)
-	iscritto = Iscritto.objects.get(studente = request.user.studente, gruppo = gruppo)
-	gruppo.iscritti -= 1
-	iscritto.delete()
-	gruppo.save()
+	if assemblea.iscrizioni_aperte:
+		gruppo = Gruppo.objects.get(id = id_gruppo)
+		iscritto = Iscritto.objects.get(studente = request.user.studente, gruppo = gruppo)
+		gruppo.iscritti -= 1
+		iscritto.delete()
+		gruppo.save()
 
-	next = request.GET.get("next")
-	if next:
-		return redirect(next)
-	return redirect("assemblee:turno", id_assemblea, id_turno)
-
+		next = request.GET.get("next")
+		if next:
+			return redirect(next)
+		return redirect("assemblee:turno", id_assemblea, id_turno)
+	raise Http404
 
 @login_required
 def disiscrivi_view(request, id_assemblea, id_turno, id_gruppo, id_utente):
 	if not request.user.studente.is_attivato:
 		raise Http404
-
-	assemblea = Assemblea.objects.get(id = id_assemblea)
-	if not assemblea.mostra and not (request.user.studente.is_rapistituto or request.user.is_superuser):
-		if not assemblea.iscrizioni_aperte:
-			raise Http404
 
 	if request.user.studente.is_rapistituto or request.user.is_superuser:
 		gruppo = Gruppo.objects.get(id = id_gruppo)
@@ -406,5 +400,4 @@ def disiscrivi_view(request, id_assemblea, id_turno, id_gruppo, id_utente):
 		gruppo.save()
 
 		return redirect("assemblee:gruppo", id_assemblea, id_turno, id_gruppo)
-	else:
-		raise Http404
+	raise Http404

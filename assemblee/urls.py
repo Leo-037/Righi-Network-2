@@ -26,8 +26,10 @@ urlpatterns = [
 				path('update/', update_gruppo_view, name = "update_gruppo"),
 				path('delete/', delete_gruppo_view, name = "delete_gruppo"),
 				path('iscrizione/', iscrizione_view, name = 'iscrizione'),
-				path('disiscrizione/', disiscrizione_view, name = 'disiscrizione'), ])),
-			path('<int:id_utente>/disiscrivi/', disiscrivi_view, name = "disiscrivi"),
+				path('disiscrizione/', disiscrizione_view, name = 'disiscrizione'),
+				path('<int:id_utente>/disiscrivi/', disiscrivi_view, name = "disiscrivi"),
+
+			])),
 		])),
 	])),
 ]

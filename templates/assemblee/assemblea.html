@@ -71,21 +71,21 @@
                                     <div data-href="{% url 'assemblee:delete_assemblea' assemblea.id %}"
                                          class="ui fluid red button delete-button">Elimina assemblea
                                     </div>
-                                    <a href="{% url 'assemblee:delete_assemblea' assemblea.id %}"
+                                    <a href="{% url 'assemblee:update_assemblea' assemblea.id %}"
                                        class="ui fluid yellow button">Modifica assemblea</a>
                                     {% if not assemblea.iscrizioni_aperte %}
-                                        <a href="{% url "assemblee:apri_iscrizioni" assemblea.id %}/?next={% url "assemblee:assemblea" assemblea.id %}"
+                                        <a href="{% url "assemblee:apri_iscrizioni" assemblea.id %}?next={% url "assemblee:assemblea" assemblea.id %}"
                                            class="ui green {% if not assemblea.mostra %}disabled {% endif %}button">Apri
                                             iscrizioni</a>
                                     {% else %}
-                                        <a href="{% url "assemblee:chiudi_iscrizioni" assemblea.id %}/?next={% url "assemblee:assemblea" assemblea.id %}"
+                                        <a href="{% url "assemblee:chiudi_iscrizioni" assemblea.id %}?next={% url "assemblee:assemblea" assemblea.id %}"
                                            class="ui orange button">Chiudi iscrizioni</a>
                                     {% endif %}
                                     {% if not assemblea.mostra %}
-                                        <a href="{% url "assemblee:mostra_assemblea" assemblea.id %}/?next={% url "assemblee:assemblea" assemblea.id %}"
+                                        <a href="{% url "assemblee:mostra_assemblea" assemblea.id %}?next={% url "assemblee:assemblea" assemblea.id %}"
                                            class="ui green button">Mostra assemblea</a>
                                     {% else %}
-                                        <a href="{% url "assemblee:nascondi_assemblea" assemblea.id %}/?next={% url "assemblee:assemblea" assemblea.id %}"
+                                        <a href="{% url "assemblee:nascondi_assemblea" assemblea.id %}?next={% url "assemblee:assemblea" assemblea.id %}"
                                            class="ui orange button">Nacondi assemblea</a>
                                     {% endif %}
                                 </div>

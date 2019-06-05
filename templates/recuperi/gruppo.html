@@ -6,14 +6,7 @@
 {% block breadcrumb %}
     <a class="section" href="{{ BASE_DIR }}/">Home</a>
     <i class="right angle icon divider"></i>
-    <a class="section" href="{% url "assemblee:all_assemblee" %}">Assemblee</a>
-    <i class="right angle icon divider"></i>
-    <a class="section" href="{% url "assemblee:assemblea" gruppo.turno.assemblea.id %}">Assemblea
-        del {{ gruppo.turno.assemblea.data }}</a>
-    <i class="right angle icon divider"></i>
-    <a class="section" href="{% url "assemblee:turno" gruppo.turno.assemblea.id gruppo.turno.id %}">Turno
-        delle {{ gruppo.turno.inizio }}
-        - {{ gruppo.turno.fine }}</a>
+    <a class="section" href="{% url "recuperi:main" %}">Settimana dei recuperi</a>
 {% endblock %}
 
 {% block content %}
@@ -23,9 +16,7 @@
             <div class="row">
                 <div class="{% if user.is_superuser or user.studente.is_rapistituto %}eleven{% else %}sixteen{% endif %} wide column"
                      style="padding: 0;">
-
                     <div class="ui internally celled grid">
-
                         <div class="row">
                             <div class="column">
                                 <div class="ui small header">
@@ -35,7 +26,6 @@
                                         <span><i class="ui map marker alternate arrow icon"></i></span>{{ gruppo.aula }}
                                     </div>
                                 </div>
-
                             </div>
                         </div>
 
@@ -47,13 +37,15 @@
 
                         <div class="row">
                             <div class="column">
-                                {% if not gruppo_iscritto %}
-                                    <a class="ui green {% if gruppo.iscritti == gruppo.iscritti_massimi or not assemblea.iscrizioni_aperte %}disabled {% endif %}right floated compact button"
-                                       href="{% url "assemblee:iscrizione" assemblea.id turno.id gruppo.id %}?next={% url "assemblee:gruppo" assemblea.id turno.id gruppo.id %}">
+                                {% if not gruppo in gruppi_iscritto %}
+                                    <a class="ui green
+{% if gruppo.iscritti == gruppo.iscritti_massimi or gruppo.lunedi and gruppo_lunedi or gruppo.martedi and gruppo_martedi or gruppo.mercoledi and gruppo_mercoledi or gruppo.giovedi and gruppo_giovedi or gruppo.venerdi and gruppo_venerdi or not iscrizioni_aperte %}
+                                disabled{% endif %} right floated compact button"
+                                       href="{% url "recuperi:iscrizione" gruppo.id %}">
                                         Iscriviti</a>
                                 {% else %}
-                                    <a class="ui red right floated compact {% if not assemblea.iscrizioni_aperte %}disabled{% endif %} button"
-                                       href="{% url "assemblee:disiscrizione" assemblea.id turno.id gruppo.id %}?next={% url "assemblee:gruppo" assemblea.id turno.id gruppo.id %}">
+                                    <a class="ui red right floated compact button"
+                                       href="{% url "recuperi:disiscrizione" gruppo.id %}">
                                         Disiscriviti</a>
                                 {% endif %}
 
@@ -70,6 +62,7 @@
                                 {% if iscritti|length > 0 %}
                                     <div class="ui hidden divider"></div>
                                     <table class="ui
+
                                             {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} compact sortable celled table">
                                         <thead>
                                         <tr>
@@ -87,7 +80,7 @@
                                             <tr>
                                                 {% if user.studente.is_rapistituto or user.is_superuser %}
                                                     <td class="collapsing">
-                                                        <i data-href="{% url "assemblee:disiscrivi" assemblea.id turno.id gruppo.id iscritto.studente.user.id %}"
+                                                        <i data-href="{% url "recuperi:disiscrivi" gruppo.id iscritto.studente.user.id %}"
                                                            class="ui red link close icon delete-button">
                                                         </i>
                                                     </td>
@@ -111,21 +104,24 @@
                 {% if user.studente.is_rapistituto or user.is_superuser %}
                     <div class="five wide column">
                         <div class="ui stackable
-                                {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} cards">
+                            {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} cards">
                             <div class="ui fluid card">
                                 <div class="content">
                                     <div class="header">Strumenti <i class="ui right floated pencil icon"></i></div>
                                 </div>
                                 <div class="content">
                                     <div class="ui two vertical buttons">
-                                        <div data-href="{% url 'assemblee:delete_gruppo' assemblea.id turno.id gruppo.id %}"
+                                        <div data-href="{% url 'recuperi:delete_gruppo' gruppo.id %}"
                                              class="ui fluid red button delete-button">Elimina gruppo
                                         </div>
-                                        <a href="{% url 'assemblee:update_gruppo' assemblea.id turno.id gruppo.id %}"
+                                        <a href="{% url 'recuperi:update_gruppo' gruppo.id %}"
                                            class="ui fluid yellow button">Modifica gruppo</a>
                                     </div>
                                 </div>
-
+                                <div class="content">
+                                    <a href="{% url "recuperi:stampa_iscritti" gruppo.id %}"
+                                       class="ui fluid blue button">Stampa iscritti</a>
+                                </div>
                             </div>
                         </div>
                     </div>

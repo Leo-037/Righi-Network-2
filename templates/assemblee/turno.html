@@ -30,7 +30,6 @@
                                         <div class="ui two top attached buttons">
                                             <a href="{% url "assemblee:update_gruppo" assemblea.id turno.id gruppo.id %}"
                                                class="ui yellow button">Modifica</a>
-                                            /
                                             <div data-href="{% url "assemblee:delete_gruppo" assemblea.id turno.id gruppo.id %}"
                                                  class="ui red button delete-button">Elimina
                                             </div>
@@ -40,8 +39,7 @@
 
                                 <div class="content">
                                     {% if gruppo == gruppo_iscritto %}
-                                        <div class="ui
-                                                {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} right floated label">
+                                        <div class="ui green right floated label">
                                             Iscritto
                                         </div>
                                     {% endif %}
@@ -53,7 +51,9 @@
                                     <div class="meta">
                                         <div class="ui big grey header"><span><i
                                                 class="ui user icon"></i></span>Tenuto da {{ gruppo.host }}<br>
-                                            <span><i class="ui marker arrow icon"></i></span>{{ gruppo.aula }}</div>
+                                            <span><i
+                                                    class="ui map marker alternate arrow icon"></i></span>{{ gruppo.aula }}
+                                        </div>
                                     </div>
                                 </div>
 
@@ -65,24 +65,24 @@
 
                                 <!-- iscritti -->
                                 <div class="extra content">
-                                    {% if gruppo.iscritti == gruppo.iscritti_massimi %}
-                                        <span><div class="ui red right floated header">Gruppo pieno</div></span>
-                                    {% endif %}
-                                    <span><div
-                                            class="ui grey header">{{ gruppo.iscritti }} / {{ gruppo.iscritti_massimi }}
+                                    <div class="ui left floated grey header">{{ gruppo.iscritti }}
+                                        / {{ gruppo.iscritti_massimi }}
                                         iscritti
-                                    </div></span>
+                                    </div>
+                                    {% if gruppo.iscritti == gruppo.iscritti_massimi %}
+                                        <div class="ui right floated red header">Gruppo pieno</div>
+                                    {% endif %}
                                 </div>
 
                                 <div class="ui two bottom attached buttons">
                                     <a href="{% url "assemblee:gruppo" assemblea.id turno.id gruppo.id %}"
                                        class="ui blue button">Mostra gruppo</a>
                                     {% if gruppo != gruppo_iscritto %}
-                                        <a class="ui green {% if gruppo.iscritti == gruppo.iscritti_massimi %}disabled {% endif %}button"
+                                        <a class="ui green {% if gruppo.iscritti == gruppo.iscritti_massimi or not assemblea.iscrizioni_aperte %}disabled{% endif %} button"
                                            href="{% url "assemblee:iscrizione" assemblea.id turno.id gruppo.id %}">
                                             Iscriviti</a>
                                     {% else %}
-                                        <a class="ui red button"
+                                        <a class="ui red {% if not assemblea.iscrizioni_aperte %}disabled{% endif %} button"
                                            href="{% url "assemblee:disiscrizione" assemblea.id turno.id gruppo.id %}">
                                             Disiscriviti</a>
                                     {% endif %}
@@ -94,6 +94,7 @@
                 {% if user.studente.is_rapistituto or user.is_superuser %}
                     <div class="five wide column">
                         <div class="ui stackable
+
                                 {% if user.studente.colore %}{{ user.studente.colore }}{% else %}green{% endif %} cards">
                             <div class="ui fluid card">
                                 <div class="content">
